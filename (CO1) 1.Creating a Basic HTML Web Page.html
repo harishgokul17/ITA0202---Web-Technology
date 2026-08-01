@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My First Web Page</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EEF0FB;
+    --card: #FFFFFF;
+    --ink: #2B2B36;
+    --ink-soft: #6B6B7B;
+    --violet: #6C63FF;
+    --violet-deep: #524AD1;
+    --coral: #FF6F59;
+    --line: rgba(43,43,54,0.08);
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    display:flex;
+    justify-content:center;
+    padding: 60px 20px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before{
+    content:"";
+    position:absolute;
+    top: -120px; right: -120px;
+    width: 320px; height: 320px;
+    background: var(--violet);
+    opacity: 0.15;
+    border-radius: 50%;
+    z-index:0;
+  }
+
+  body::after{
+    content:"";
+    position:absolute;
+    bottom: -140px; left: -140px;
+    width: 360px; height: 360px;
+    background: var(--coral);
+    opacity: 0.12;
+    border-radius: 50%;
+    z-index:0;
+  }
+
+  .page{
+    width: 100%;
+    max-width: 640px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero{
+    background: var(--card);
+    border-radius: 20px;
+    padding: 40px 36px;
+    text-align:center;
+    box-shadow: 0 20px 50px rgba(43,43,54,0.08);
+    margin-bottom: 20px;
+  }
+
+  .badge{
+    display:inline-block;
+    background: rgba(108,99,255,0.1);
+    color: var(--violet-deep);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 18px;
+  }
+
+  h1{
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .hero p{
+    color: var(--ink-soft);
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .card{
+    background: var(--card);
+    border-radius: 18px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(43,43,54,0.05);
+  }
+
+  .card h2{
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    margin: 0 0 10px;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+
+  .card h2::before{
+    content:"";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--coral);
+  }
+
+  .card p{
+    color: var(--ink-soft);
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .subjects{
+    list-style:none;
+    margin: 14px 0 0;
+    padding: 0;
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .subjects li{
+    background: var(--bg);
+    color: var(--violet-deep);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px 18px;
+    border-radius: 100px;
+    border: 1px solid var(--line);
+  }
+
+  .contact-card{
+    background: linear-gradient(135deg, var(--violet), var(--violet-deep));
+    color: #fff;
+    border-radius: 18px;
+    padding: 28px 32px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    box-shadow: 0 15px 35px rgba(108,99,255,0.25);
+  }
+
+  .contact-card h2{
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0 0 4px;
+  }
+
+  .contact-card a{
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.5);
+    padding-bottom: 2px;
+    font-size: 15px;
+  }
+
+  .contact-card a:hover{ border-color: #fff; }
+
+  footer{
+    text-align:center;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 24px;
+  }
+
+  @media (max-width: 480px){
+    .hero, .card, .contact-card{ padding: 24px 22px; }
+    h1{ font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="hero">
+    <span class="badge">Getting started with the web</span>
+    <h1>Welcome to My Web Page</h1>
+    <p>This is my first HTML web page.</p>
+  </div>
+
+  <div class="card">
+    <h2>About Me</h2>
+    <p>I am learning Web Technology.</p>
+  </div>
+
+  <div class="card">
+    <h2>My Subjects</h2>
+    <ul class="subjects">
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>JavaScript</li>
+    </ul>
+  </div>
+
+  <div class="contact-card">
+    <div>
+      <h2>Contact</h2>
+      <a href="mailto:example@gmail.com">example@gmail.com</a>
+    </div>
+  </div>
+
+  <footer>Made while learning HTML and CSS</footer>
+
+</div>
+
+</body>
+</html>
