@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIMATS College</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-strong: #eef2ff;
+      --text: #0f172a;
+      --muted: #475569;
+      --brand: #2563eb;
+      --brand-dark: #1d4ed8;
+      --border: rgba(15, 23, 42, 0.08);
+      --radius: 24px;
+      --radius-sm: 16px;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      width: min(1200px, 100%);
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 32px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand__mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--brand);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .brand__name {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 30px;
+      padding: 64px 32px;
+      align-items: center;
+    }
+
+    .hero__copy {
+      max-width: 620px;
+    }
+
+    .hero__eyebrow {
+      margin: 0 0 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--brand);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .hero__title {
+      margin: 0;
+      font-size: clamp(2.8rem, 4vw, 4.8rem);
+      line-height: 0.95;
+    }
+
+    .hero__text {
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 580px;
+    }
+
+    .hero__actions {
+      margin-top: 32px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      border: none;
+      border-radius: 999px;
+      padding: 16px 26px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    .button--primary {
+      background: var(--brand);
+      color: white;
+    }
+
+    .button--secondary {
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--brand-dark);
+    }
+
+    .hero__image {
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .sections {
+      display: grid;
+      gap: 28px;
+      padding: 0 32px 48px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin: 0 0 14px;
+      font-size: 1.15rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .feature {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      background: var(--surface-strong);
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+
+    .feature:hover {
+      border-color: var(--brand);
+    }
+
+    .feature__icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: rgba(37, 99, 235, 0.12);
+      display: grid;
+      place-items: center;
+      color: var(--brand);
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .feature__content h4 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+    }
+
+    .feature__content p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .about img {
+      border-radius: 24px;
+      width: 100%;
+      object-fit: cover;
+      aspect-ratio: 4 / 3;
+    }
+
+    .about__text h2 {
+      margin: 0 0 18px;
+      font-size: 2rem;
+    }
+
+    .about__text p {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+
+    .contact {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .contact-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .contact-card h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .contact-card p {
+      margin: 0 0 8px;
+      color: var(--muted);
+    }
+
+    .footer {
+      padding: 24px 32px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 1024px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .about {
+        grid-template-columns: 1fr;
+      }
+
+      .contact {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      header,
+      .hero,
+      .sections,
+      .analysis-card__content,
+      .footer {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+      }
+
+      .nav {
+        gap: 18px;
+      }
+
+      .cards,
+      .feature-list {
+        grid-template-columns: 1fr;
+      }
+
+      .button {
+        width: fit-content;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .hero {
+        padding: 32px 18px;
+      }
+
+      .hero__title {
+        font-size: clamp(2rem, 12vw, 3rem);
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <div class="brand__mark">S</div>
+        <div>
+          <p class="brand__name">SIMATS College</p>
+          <p class="brand__tag">Inspiring Tomorrow’s Leaders</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="#about">About</a>
+        <a href="#programs">Programs</a>
+        <a href="#campus">Campus</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero__copy">
+        <p class="hero__eyebrow">Welcome to SIMATS</p>
+        <h1 class="hero__title">A modern campus for future-ready education.</h1>
+        <p class="hero__text">Explore our industry-aligned programs, vibrant student life, and advanced campus facilities designed to empower every learner with knowledge, experience, and a strong professional path.</p>
+        <div class="hero__actions">
+          <button class="button button--primary">Apply Now</button>
+          <button class="button button--secondary">View Programs</button>
+        </div>
+      </div>
+
+      <div class="hero__image">
+        <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=900&q=80" alt="College campus building">
+      </div>
+    </section>
+
+    <div class="sections">
+      <div class="cards">
+        <article class="card">
+          <h3>Academic Excellence</h3>
+          <p>Programs designed for strong theoretical knowledge, practical labs, and industry exposure in technology, business, and science.</p>
+        </article>
+
+        <article class="card">
+          <h3>Student Community</h3>
+          <p>Vibrant clubs, mentorship programs, and campus events help students develop confidence, leadership, and teamwork.</p>
+        </article>
+
+        <article class="card">
+          <h3>Global Opportunities</h3>
+          <p>International partnerships and internships connect students with real-world experience and career pathways.</p>
+        </article>
+      </div>
+
+      <div class="feature-list" id="programs">
+        <div class="feature">
+          <div class="feature__icon">IT</div>
+          <div class="feature__content">
+            <h4>Information Technology</h4>
+            <p>Industry-oriented IT programs with a focus on software, networks, and cybersecurity.</p>
+          </div>
+        </div>
+
+        <div class="feature">
+          <div class="feature__icon">CS</div>
+          <div class="feature__content">
+            <h4>Computer Science</h4>
+            <p>Compute-rich curriculum with data science, AI, and machine learning pathways.</p>
+          </div>
+        </div>
+
+        <div class="feature">
+          <div class="feature__icon">BA</div>
+          <div class="feature__content">
+            <h4>Arts & Humanities</h4>
+            <p>Human-centered programs that build writing, communication, and critical thinking skills.</p>
+          </div>
+        </div>
+
+        <div class="feature">
+          <div class="feature__icon">MG</div>
+          <div class="feature__content">
+            <h4>Management</h4>
+            <p>Business and management studies with practical projects and entrepreneurship guidance.</p>
+          </div>
+        </div>
+      </div>
+
+      <section class="about" id="about">
+        <div class="about__text">
+          <h2>Leading education for a changing world</h2>
+          <p>SIMATS College combines modern facilities, expert faculty, and a supportive student environment to build strong academic foundations.</p>
+          <p>Our campus bridges classroom learning with hands-on experience, preparing students for academic success and real-world careers.</p>
+        </div>
+        <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=900&q=80" alt="Students on campus">
+      </section>
+
+      <div class="contact" id="contact">
+        <article class="contact-card">
+          <h3>Admission Office</h3>
+          <p>Phone: +91 98765 43210</p>
+          <p>Email: admissions@simats.edu</p>
+        </article>
+
+        <article class="contact-card">
+          <h3>Campus Location</h3>
+          <p>Chennai, Tamil Nadu</p>
+          <p>Modern classrooms, labs, and student facilities in a vibrant community.</p>
+        </article>
+
+        <article class="contact-card">
+          <h3>Open Hours</h3>
+          <p>Monday - Friday: 9am - 6pm</p>
+          <p>Saturday: 10am - 3pm</p>
+        </article>
+      </div>
+    </div>
+
+    <footer class="footer">
+      © 2026 SIMATS College. All rights reserved.
+    </footer>
+  </div>
+</body>
+</html>

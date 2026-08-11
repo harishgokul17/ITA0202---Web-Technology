@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Shopping Cart & Billing System</title>
+  <style>
+    :root {
+      --bg: #f5f7ff;
+      --surface: #ffffff;
+      --text: #111827;
+      --muted: #475569;
+      --primary: #4338ca;
+      --primary-soft: #e0e7ff;
+      --success: #16a34a;
+      --border: #d1d5db;
+      --radius: 24px;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%);
+      color: var(--text);
+      padding: 24px;
+    }
+
+    .app {
+      width: min(1140px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 24px;
+    }
+
+    .hero {
+      padding: 30px 28px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(2rem, 3vw, 3.2rem);
+    }
+
+    .hero p {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 760px;
+    }
+
+    .store-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+
+    .product-list,
+    .summary-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .product-list__header,
+    .summary-card__header {
+      padding: 26px 28px;
+      border-bottom: 1px solid var(--border);
+      background: var(--primary-soft);
+    }
+
+    .product-list__header h2,
+    .summary-card__header h2 {
+      margin: 0;
+      font-size: 1.3rem;
+      color: var(--primary);
+    }
+
+    .product-items {
+      display: grid;
+    }
+
+    .product-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      padding: 22px 28px;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .product-item:last-child {
+      border-bottom: none;
+    }
+
+    .product-details {
+      display: grid;
+      gap: 8px;
+    }
+
+    .product-title {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .product-desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .product-actions {
+      display: grid;
+      gap: 10px;
+      justify-items: end;
+      text-align: right;
+    }
+
+    .quantity-control {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .quantity-control button {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .quantity-control span {
+      min-width: 32px;
+      text-align: center;
+      display: inline-block;
+      font-weight: 700;
+    }
+
+    .remove-button {
+      border: none;
+      background: none;
+      color: #ef4444;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .summary-card__body {
+      display: grid;
+      gap: 18px;
+      padding: 28px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+    }
+
+    .summary-row strong,
+    .summary-total strong {
+      color: var(--text);
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.2rem;
+      font-weight: 700;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .checkout-button {
+      width: 100%;
+      padding: 16px 18px;
+      border: none;
+      border-radius: 16px;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .empty-state {
+      padding: 22px 28px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 960px) {
+      .store-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 660px) {
+      .product-item {
+        grid-template-columns: 1fr;
+      }
+
+      .product-actions {
+        justify-items: start;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <h1>Product Shopping Cart and Billing System</h1>
+      <p>Browse products, adjust quantities, and see the billing summary update instantly with JavaScript cart calculations.</p>
+    </section>
+
+    <section class="store-grid">
+      <div class="product-list">
+        <div class="product-list__header">
+          <h2>Shopping Cart</h2>
+        </div>
+        <div class="product-items" id="productItems"></div>
+      </div>
+
+      <aside class="summary-card">
+        <div class="summary-card__header">
+          <h2>Billing Summary</h2>
+        </div>
+        <div class="summary-card__body">
+          <div class="summary-row">
+            <span>Items Total</span>
+            <strong id="itemsTotal">₹0</strong>
+          </div>
+          <div class="summary-row">
+            <span>Tax (5%)</span>
+            <strong id="taxAmount">₹0</strong>
+          </div>
+          <div class="summary-row">
+            <span>Delivery Fee</span>
+            <strong id="deliveryFee">₹50</strong>
+          </div>
+          <div class="summary-total">
+            <span>Total Amount</span>
+            <strong id="totalAmount">₹0</strong>
+          </div>
+          <button type="button" class="checkout-button" id="checkoutButton">Proceed to Checkout</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const products = [
+      { id: 'prod1', name: 'Wireless Headphones', description: 'Noise-cancelling Bluetooth headphones', price: 2499, quantity: 0 },
+      { id: 'prod2', name: 'Smart Watch', description: 'Fitness tracking and notifications', price: 3599, quantity: 0 },
+      { id: 'prod3', name: 'Laptop Bag', description: 'Water-resistant backpack for laptops', price: 1299, quantity: 0 }
+    ];
+
+    const productItemsEl = document.getElementById('productItems');
+    const itemsTotalEl = document.getElementById('itemsTotal');
+    const taxAmountEl = document.getElementById('taxAmount');
+    const deliveryFeeEl = document.getElementById('deliveryFee');
+    const totalAmountEl = document.getElementById('totalAmount');
+    const checkoutButton = document.getElementById('checkoutButton');
+
+    const DELIVERY_FEE = 50;
+    const TAX_RATE = 0.05;
+
+    function formatCurrency(value) {
+      return `₹${value.toFixed(2)}`;
+    }
+
+    function renderCart() {
+      productItemsEl.innerHTML = '';
+
+      if (products.length === 0) {
+        productItemsEl.innerHTML = '<div class="empty-state">Your cart is empty.</div>';
+        updateSummary();
+        return;
+      }
+
+      products.forEach(product => {
+        const item = document.createElement('div');
+        item.className = 'product-item';
+
+        const details = document.createElement('div');
+        details.className = 'product-details';
+        details.innerHTML = `
+          <p class="product-title">${product.name}</p>
+          <p class="product-desc">${product.description}</p>
+          <p class="product-desc">Price: ${formatCurrency(product.price)}</p>
+        `;
+
+        const actions = document.createElement('div');
+        actions.className = 'product-actions';
+
+        const quantityControl = document.createElement('div');
+        quantityControl.className = 'quantity-control';
+        const decrement = document.createElement('button');
+        decrement.type = 'button';
+        decrement.textContent = '-';
+        decrement.addEventListener('click', () => updateQuantity(product.id, -1));
+
+        const quantity = document.createElement('span');
+        quantity.textContent = product.quantity;
+
+        const increment = document.createElement('button');
+        increment.type = 'button';
+        increment.textContent = '+';
+        increment.addEventListener('click', () => updateQuantity(product.id, 1));
+
+        quantityControl.appendChild(decrement);
+        quantityControl.appendChild(quantity);
+        quantityControl.appendChild(increment);
+
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'remove-button';
+        removeButton.textContent = 'Remove';
+        removeButton.addEventListener('click', () => removeProduct(product.id));
+
+        actions.appendChild(quantityControl);
+        actions.appendChild(removeButton);
+
+        item.appendChild(details);
+        item.appendChild(actions);
+
+        productItemsEl.appendChild(item);
+      });
+
+      updateSummary();
+    }
+
+    function updateQuantity(productId, change) {
+      const product = products.find(item => item.id === productId);
+      if (!product) return;
+      product.quantity = Math.max(1, product.quantity + change);
+      renderCart();
+    }
+
+    function removeProduct(productId) {
+      const index = products.findIndex(item => item.id === productId);
+      if (index !== -1) {
+        products.splice(index, 1);
+        renderCart();
+      }
+    }
+
+    function updateSummary() {
+      const itemsTotal = products.reduce((sum, product) => sum + product.price * product.quantity, 0);
+      const taxAmount = itemsTotal * TAX_RATE;
+      const hasItems = itemsTotal > 0;
+      const totalAmount = hasItems ? itemsTotal + taxAmount + DELIVERY_FEE : 0;
+
+      itemsTotalEl.textContent = formatCurrency(itemsTotal);
+      taxAmountEl.textContent = formatCurrency(taxAmount);
+      totalAmountEl.textContent = formatCurrency(totalAmount);
+      deliveryFeeEl.textContent = hasItems ? formatCurrency(DELIVERY_FEE) : '₹0.00';
+      checkoutButton.disabled = !hasItems;
+      checkoutButton.textContent = hasItems ? 'Proceed to Checkout' : 'Cart is empty';
+    }
+
+    checkoutButton.addEventListener('click', () => {
+      if (products.length === 0) return;
+      const total = products.reduce((sum, product) => sum + product.price * product.quantity, 0);
+      const taxAmount = total * TAX_RATE;
+      const finalTotal = total + taxAmount + DELIVERY_FEE;
+      alert(`Total amount due: ${formatCurrency(finalTotal)}\nThank you for your purchase!`);
+    });
+
+    renderCart();
+  </script>
+</body>
+</html>

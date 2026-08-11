@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debugged CSS & JavaScript Web App</title>
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --surface: #ffffff;
+      --text: #111827;
+      --muted: #475569;
+      --primary: #2563eb;
+      --border: #d1d5db;
+      --radius: 20px;
+      --shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #eef2ff 0%, var(--bg) 40%);
+      color: var(--text);
+      padding: 24px;
+    }
+
+    .container {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 24px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 28px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 2.4vw, 2.6rem);
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 22px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .card-body {
+      padding: 24px 28px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .task-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .task-form input,
+    .task-form button {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 14px 16px;
+      font-size: 1rem;
+    }
+
+    .task-form button {
+      background: var(--primary);
+      color: white;
+      border-color: transparent;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .task-form button:hover {
+      background: #1d4ed8;
+    }
+
+    .task-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .task-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      transition: transform 0.2s ease;
+      background: #ffffff;
+    }
+
+    .task-item:hover {
+      transform: translateY(-1px);
+    }
+
+    .task-info {
+      display: grid;
+      gap: 6px;
+    }
+
+    .task-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .task-meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button.small {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      color: var(--text);
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    button.small:hover {
+      background: #eef2ff;
+    }
+
+    .completed .task-title {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
+      gap: 14px;
+    }
+
+    .stat-card {
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      display: grid;
+      gap: 8px;
+    }
+
+    .stat-card span {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .stat-card strong {
+      font-size: 1.4rem;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    @media (max-width: 760px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div>
+        <h1>Task Manager Debugged App</h1>
+        <p style="margin: 8px 0 0; color: var(--muted);">A corrected CSS and JavaScript application for adding and managing tasks.</p>
+      </div>
+      <div style="text-align: right; color: var(--muted); font-size: 0.95rem;">
+        Built with live validation and working event handling.
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Add a new task</h2>
+      </div>
+      <div class="card-body">
+        <form id="taskForm" class="task-form">
+          <input id="taskTitle" type="text" placeholder="Enter task title" aria-label="Task title" required>
+          <input id="taskDescription" type="text" placeholder="Task description (optional)" aria-label="Task description">
+          <button type="submit">Add Task</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Tasks</h2>
+        <button id="clearCompleted" class="small" type="button">Clear Completed</button>
+      </div>
+      <div class="card-body">
+        <ul id="taskList" class="task-list"></ul>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Summary</h2>
+      </div>
+      <div class="card-body stats">
+        <div class="stat-card">
+          <span>Total Tasks</span>
+          <strong id="totalTasks">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>Completed</span>
+          <strong id="completedTasks">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>Pending</span>
+          <strong id="pendingTasks">0</strong>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const taskForm = document.getElementById('taskForm');
+    const taskTitleInput = document.getElementById('taskTitle');
+    const taskDescriptionInput = document.getElementById('taskDescription');
+    const taskList = document.getElementById('taskList');
+    const totalTasksEl = document.getElementById('totalTasks');
+    const completedTasksEl = document.getElementById('completedTasks');
+    const pendingTasksEl = document.getElementById('pendingTasks');
+    const clearCompletedButton = document.getElementById('clearCompleted');
+
+    let tasks = [];
+
+    function createTaskElement(task) {
+      const listItem = document.createElement('li');
+      listItem.className = `task-item${task.completed ? ' completed' : ''}`;
+
+      const taskInfo = document.createElement('div');
+      taskInfo.className = 'task-info';
+
+      const title = document.createElement('p');
+      title.className = 'task-title';
+      title.textContent = task.title;
+
+      const description = document.createElement('p');
+      description.className = 'task-meta';
+      description.textContent = task.description || 'No description provided.';
+
+      taskInfo.appendChild(title);
+      taskInfo.appendChild(description);
+
+      const actions = document.createElement('div');
+      actions.className = 'task-actions';
+
+      const toggleButton = document.createElement('button');
+      toggleButton.type = 'button';
+      toggleButton.className = 'small';
+      toggleButton.textContent = task.completed ? 'Mark Incomplete' : 'Mark Complete';
+      toggleButton.addEventListener('click', () => toggleTask(task.id));
+
+      const deleteButton = document.createElement('button');
+      deleteButton.type = 'button';
+      deleteButton.className = 'small';
+      deleteButton.textContent = 'Delete';
+      deleteButton.addEventListener('click', () => deleteTask(task.id));
+
+      actions.appendChild(toggleButton);
+      actions.appendChild(deleteButton);
+
+      listItem.appendChild(taskInfo);
+      listItem.appendChild(actions);
+
+      return listItem;
+    }
+
+    function renderTasks() {
+      taskList.innerHTML = '';
+
+      if (tasks.length === 0) {
+        const emptyState = document.createElement('li');
+        emptyState.className = 'task-item';
+        emptyState.textContent = 'No tasks yet. Add one to get started.';
+        emptyState.style.justifyContent = 'center';
+        taskList.appendChild(emptyState);
+        updateStats();
+        return;
+      }
+
+      tasks.forEach(task => {
+        taskList.appendChild(createTaskElement(task));
+      });
+
+      updateStats();
+    }
+
+    function updateStats() {
+      const total = tasks.length;
+      const completed = tasks.filter(task => task.completed).length;
+      const pending = total - completed;
+
+      totalTasksEl.textContent = total;
+      completedTasksEl.textContent = completed;
+      pendingTasksEl.textContent = pending;
+    }
+
+    function toggleTask(taskId) {
+      tasks = tasks.map(task => {
+        if (task.id === taskId) {
+          return { ...task, completed: !task.completed };
+        }
+        return task;
+      });
+      renderTasks();
+    }
+
+    function deleteTask(taskId) {
+      tasks = tasks.filter(task => task.id !== taskId);
+      renderTasks();
+    }
+
+    function clearCompletedTasks() {
+      tasks = tasks.filter(task => !task.completed);
+      renderTasks();
+    }
+
+    function createTask(title, description) {
+      return {
+        id: Date.now().toString(),
+        title: title.trim(),
+        description: description.trim(),
+        completed: false,
+      };
+    }
+
+    taskForm.addEventListener('submit', event => {
+      event.preventDefault();
+
+      const title = taskTitleInput.value;
+      const description = taskDescriptionInput.value;
+
+      if (!title.trim()) {
+        alert('Please enter a task title.');
+        taskTitleInput.focus();
+        return;
+      }
+
+      tasks.push(createTask(title, description));
+      taskTitleInput.value = '';
+      taskDescriptionInput.value = '';
+      taskTitleInput.focus();
+      renderTasks();
+    });
+
+    clearCompletedButton.addEventListener('click', clearCompletedTasks);
+
+    renderTasks();
+  </script>
+</body>
+</html>

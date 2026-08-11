@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Student Profile</title>
+  <style>
+    :root {
+      --bg: #eef4fb;
+      --card-bg: #ffffff;
+      --card-surface: #f8fbff;
+      --text: #1f2937;
+      --muted: #64748b;
+      --accent: #4f46e5;
+      --border: rgba(15, 23, 42, 0.08);
+      --radius: 24px;
+      --radius-sm: 16px;
+      --shadow: 0 28px 70px rgba(15, 23, 42, 0.08);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f7fbff 0%, #eef4fb 100%);
+      color: var(--text);
+    }
+
+    body {
+      line-height: 1.6;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .page {
+      width: min(1140px, 100%);
+      margin: 0 auto;
+      padding: 28px 24px 48px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 32px;
+      padding: 48px 40px;
+      background: linear-gradient(135deg, #4338ca 0%, #2563eb 100%);
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 30%),
+                  radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.12), transparent 24%);
+      pointer-events: none;
+    }
+
+    .hero__content {
+      position: relative;
+      max-width: 720px;
+    }
+
+    .hero__eyebrow {
+      margin: 0 0 14px;
+      font-size: 0.85rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .hero__title {
+      margin: 0;
+      font-size: clamp(2.6rem, 4vw, 4.2rem);
+      line-height: 1.02;
+    }
+
+    .hero__subtitle {
+      margin: 22px 0 0;
+      max-width: 660px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.05rem;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .card:last-child {
+      padding-bottom: 32px;
+    }
+
+    .profile-card {
+      display: grid;
+      gap: 20px;
+    }
+
+    .profile-card__header {
+      display: grid;
+      gap: 20px;
+    }
+
+    .profile-card__name {
+      margin: 0;
+      font-size: 2.2rem;
+    }
+
+    .profile-card__role {
+      margin: 0;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .profile-card__bio {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .details {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .detail {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--card-surface);
+    }
+
+    .detail__label {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .detail__value {
+      font-weight: 700;
+    }
+
+    .stats {
+      display: grid;
+      gap: 16px;
+    }
+
+    .stats__grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .stat {
+      padding: 20px;
+      border-radius: 20px;
+      background: var(--card-surface);
+      text-align: center;
+    }
+
+    .stat__value {
+      display: block;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .stat__label {
+      margin-top: 8px;
+      color: var(--muted);
+    }
+
+    .skill-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .skill-list li {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(79, 70, 229, 0.1);
+      color: #3730a3;
+      font-weight: 600;
+    }
+
+    .contact p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .contact p:last-child {
+      margin-bottom: 0;
+    }
+
+    .about {
+      margin-top: 32px;
+      padding: 32px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .about h2 {
+      margin-top: 0;
+    }
+
+    .about p {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+
+    .about p:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 980px) {
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 18px 16px 36px;
+      }
+
+      .hero {
+        padding: 38px 24px;
+      }
+
+      .card,
+      .about {
+        padding: 22px;
+      }
+
+      .hero__title {
+        font-size: clamp(2rem, 10vw, 3rem);
+      }
+
+      .stats__grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .detail {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .detail__value {
+        margin-top: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="hero__content">
+        <p class="hero__eyebrow">Student Profile</p>
+        <h1 class="hero__title">Harish</h1>
+        <p class="hero__subtitle">A responsive student profile webpage with clean layout, modern colors, readable typography, and mobile-friendly structure.</p>
+      </div>
+    </section>
+
+    <section class="profile-grid">
+      <article class="card profile-card">
+        <div class="profile-card__header">
+          <div>
+            <h2 class="profile-card__name">Harish</h2>
+            <p class="profile-card__role">2nd Year B.Tech IT</p>
+          </div>
+          <p class="profile-card__bio">Passionate about web development, responsive UI design, and practical IT solutions. Enjoys learning new technologies and building projects with strong usability.</p>
+        </div>
+
+        <div class="details">
+          <div class="detail">
+            <span class="detail__label">University</span>
+            <span class="detail__value">SIMATS UNIVERSITY</span>
+          </div>
+          <div class="detail">
+            <span class="detail__label">Major</span>
+            <span class="detail__value">Information Technology</span>
+          </div>
+          <div class="detail">
+            <span class="detail__label">CGPA</span>
+            <span class="detail__value">8.67 / 10</span>
+          </div>
+        </div>
+      </article>
+
+      <aside class="card">
+        <section class="stats">
+          <h3 class="card__title">Academic Stats</h3>
+          <div class="stats__grid">
+            <div class="stat">
+              <span class="stat__value">14/32</span>
+              <span class="stat__label">Courses</span>
+            </div>
+            <div class="stat">
+              <span class="stat__value">4</span>
+              <span class="stat__label">Projects</span>
+            </div>
+            <div class="stat">
+              <span class="stat__value">2</span>
+              <span class="stat__label">Clubs</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="skills">
+          <h3 class="card__title">Skills</h3>
+          <ul class="skill-list">
+            <li>C</li>
+            <li>JavaScript</li>
+            <li>Python</li>
+            <li>SQL</li>
+          </ul>
+        </section>
+
+        <section class="contact">
+          <h3 class="card__title">Contact</h3>
+          <p><strong>Email:</strong> harishgokul1703@gmail.com</p>
+          <p><strong>Phone:</strong> 7358611801</p>
+          <p><strong>Location:</strong> Chennai, India</p>
+        </section>
+      </aside>
+    </section>
+
+    <section class="about card">
+      <h2>About Me</h2>
+      <p>I design responsive webpages using clean HTML structure, thoughtful CSS selectors, and adaptive media queries. My portfolio focuses on accessible interfaces, consistent spacing, and modern visual design.</p>
+      <p>The layout includes borders, margins, padding, and a mobile-first box model to ensure this profile looks great on phones, tablets, and desktops.</p>
+    </section>
+  </main>
+</body>
+</html>

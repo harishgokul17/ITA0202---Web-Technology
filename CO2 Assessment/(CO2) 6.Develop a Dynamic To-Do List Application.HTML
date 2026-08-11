@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic To-Do List</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --accent: #4338ca;
+      --accent-soft: #e0e7ff;
+      --text: #111827;
+      --muted: #475569;
+      --border: #d1d5db;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #eef2ff 0%, #f8fafc 100%);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .app {
+      width: min(860px, 100%);
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .app__hero {
+      padding: 32px;
+      background: linear-gradient(135deg, #4338ca 0%, #2563eb 100%);
+      color: white;
+    }
+
+    .app__hero h1 {
+      margin: 0;
+      font-size: clamp(2rem, 3vw, 3rem);
+      line-height: 1.05;
+    }
+
+    .app__hero p {
+      margin: 16px 0 0;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 620px;
+      font-size: 1rem;
+    }
+
+    .app__main {
+      padding: 32px;
+      display: grid;
+      gap: 28px;
+    }
+
+    .task-form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .task-form__row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+    }
+
+    .task-form input {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #f8fafc;
+    }
+
+    .task-form button {
+      border: none;
+      border-radius: 16px;
+      padding: 16px 22px;
+      background: var(--accent);
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .task-form button:hover {
+      transform: translateY(-1px);
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .filter-bar button {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 18px;
+      background: white;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .filter-bar button.active {
+      background: var(--accent-soft);
+      border-color: rgba(67, 56, 202, 0.22);
+      color: var(--accent);
+    }
+
+    .tasks {
+      display: grid;
+      gap: 14px;
+    }
+
+    .task {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 18px 20px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .task__checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .task__label {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .task__label.completed {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .task__actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .task__button {
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 12px;
+      background: white;
+      color: var(--muted);
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    .task__button:hover {
+      transform: translateY(-1px);
+    }
+
+    .completed-counter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--text);
+    }
+
+    .completed-counter p {
+      margin: 0;
+      font-weight: 700;
+    }
+
+    @media (max-width: 720px) {
+      .task-form__row {
+        grid-template-columns: 1fr;
+      }
+
+      .task {
+        grid-template-columns: auto 1fr;
+      }
+
+      .task__actions {
+        justify-content: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="app__hero">
+      <h1>Dynamic To-Do List</h1>
+      <p>Create, update, and manage tasks with live JavaScript rendering and DOM interaction.</p>
+    </section>
+
+    <section class="app__main">
+      <form class="task-form" id="taskForm">
+        <div class="task-form__row">
+          <input type="text" id="taskInput" placeholder="Add a new task" autocomplete="off">
+          <button type="submit">Add Task</button>
+        </div>
+      </form>
+
+      <div class="filter-bar" id="filterBar">
+        <button type="button" class="active" data-filter="all">All</button>
+        <button type="button" data-filter="active">Active</button>
+        <button type="button" data-filter="completed">Completed</button>
+      </div>
+
+      <div class="tasks" id="taskList"></div>
+
+      <div class="completed-counter" id="counter">
+        <p>Completed Tasks: <span id="completedCount">0</span></p>
+        <button type="button" id="clearCompleted" class="task__button">Clear</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const taskForm = document.getElementById('taskForm');
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+    const filterBar = document.getElementById('filterBar');
+    const completedCount = document.getElementById('completedCount');
+    const clearCompleted = document.getElementById('clearCompleted');
+
+    let tasks = [];
+    let currentFilter = 'all';
+
+    function renderTasks() {
+      taskList.innerHTML = '';
+      const filteredTasks = tasks.filter(task => {
+        if (currentFilter === 'active') return !task.completed;
+        if (currentFilter === 'completed') return task.completed;
+        return true;
+      });
+
+      for (const task of filteredTasks) {
+        const taskItem = document.createElement('div');
+        taskItem.className = 'task';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = task.completed;
+        checkbox.className = 'task__checkbox';
+        checkbox.addEventListener('change', () => toggleTask(task.id));
+
+        const label = document.createElement('p');
+        label.className = 'task__label' + (task.completed ? ' completed' : '');
+        label.textContent = task.text;
+
+        const actions = document.createElement('div');
+        actions.className = 'task__actions';
+
+        const editButton = document.createElement('button');
+        editButton.type = 'button';
+        editButton.className = 'task__button';
+        editButton.textContent = '✎';
+        editButton.title = 'Edit task';
+        editButton.addEventListener('click', () => editTask(task.id));
+
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.className = 'task__button';
+        deleteButton.textContent = '🗑';
+        deleteButton.title = 'Delete task';
+        deleteButton.addEventListener('click', () => deleteTask(task.id));
+
+        actions.appendChild(editButton);
+        actions.appendChild(deleteButton);
+
+        taskItem.appendChild(checkbox);
+        taskItem.appendChild(label);
+        taskItem.appendChild(actions);
+
+        taskList.appendChild(taskItem);
+      }
+
+      completedCount.textContent = tasks.filter(task => task.completed).length;
+    }
+
+    function updateFilterButtons() {
+      const buttons = filterBar.querySelectorAll('button');
+      buttons.forEach(button => {
+        button.classList.toggle('active', button.dataset.filter === currentFilter);
+      });
+    }
+
+    function addTask(text) {
+      if (!text.trim()) return;
+      tasks.push({
+        id: Date.now().toString(),
+        text: text.trim(),
+        completed: false
+      });
+      taskInput.value = '';
+      renderTasks();
+    }
+
+    function toggleTask(id) {
+      tasks = tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task);
+      renderTasks();
+    }
+
+    function editTask(id) {
+      const task = tasks.find(task => task.id === id);
+      if (!task) return;
+      const newText = prompt('Edit task', task.text);
+      if (newText !== null) {
+        tasks = tasks.map(task => task.id === id ? { ...task, text: newText.trim() } : task);
+        renderTasks();
+      }
+    }
+
+    function deleteTask(id) {
+      tasks = tasks.filter(task => task.id !== id);
+      renderTasks();
+    }
+
+    function clearCompletedTasks() {
+      tasks = tasks.filter(task => !task.completed);
+      renderTasks();
+    }
+
+    taskForm.addEventListener('submit', event => {
+      event.preventDefault();
+      addTask(taskInput.value);
+    });
+
+    filterBar.addEventListener('click', event => {
+      const button = event.target.closest('button');
+      if (!button) return;
+      currentFilter = button.dataset.filter;
+      updateFilterButtons();
+      renderTasks();
+    });
+
+    clearCompleted.addEventListener('click', clearCompletedTasks);
+
+    renderTasks();
+  </script>
+</body>
+</html>
