@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIMATS Engineering | Campus Connect 2026</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  /* INTERNAL CSS: footer-only styling demonstration */
+  footer.site-footer {
+    background: #111827;
+    color: #d8e0ed;
+  }
+  footer.site-footer a {
+    color: #7dd3c7;
+    text-decoration: none;
+  }
+  footer.site-footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<header class="site-header" id="top">
+  <div class="header-inner">
+    <a class="brand" href="#top" aria-label="SIMATS Engineering home">
+      <span class="brand-mark">SE</span>
+      <span class="brand-text"><strong>SIMATS Engineering</strong><small>Campus Connect Portal</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Primary navigation">
+      <ul>
+        <li><a class="active" href="#top">Home</a></li>
+        <li><a href="#events">Events</a></li>
+        <li><a href="#register">Register</a></li>
+        <li><a href="#footer-info">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-content">
+    <p class="hero-tag">SIMATS ENGINEERING • CAMPUS CONNECT</p>
+    <h1 id="hero-title">One portal.<br><span style="color:#f7c948; font-style:italic;">Many experiences.</span></h1>
+    <p class="hero-sub">Explore technical challenges, cultural celebrations, career preparation and sports activities in one responsive registration portal.</p>
+    <div class="hero-actions">
+      <a class="cta-btn" href="#events">Explore Events</a>
+      <a class="secondary-btn" href="#register">Register Now</a>
+    </div>
+    <p class="hero-period"><strong>Registration window:</strong> 10–30 August 2026</p>
+  </div>
+</section>
+
+<main>
+<section class="events" id="events">
+  <div class="section-heading">
+    <div><p class="section-kicker">WHAT'S HAPPENING</p><h2 class="section-title">Campus Event Line-up</h2></div>
+    <p class="section-sub">Choose an event, check the status and reserve your place before registrations close.</p>
+  </div>
+  <div class="event-grid">
+    <article class="event-card" data-category="technical">
+      <span class="status-badge open">Open</span>
+      <div class="category-label">TECHNICAL</div>
+      <h3>CodeForge Innovation Sprint</h3>
+      <p class="event-meta"><strong>Date &amp; Time:</strong> 16 Aug 2026, 9:00 AM</p>
+      <p class="event-meta"><strong>Venue:</strong> CSE Innovation Lab</p>
+      <p class="event-desc">A rapid team challenge to design and prototype practical solutions for campus and community problems.</p>
+      <a href="#register" class="register-btn">Reserve Seat <span aria-hidden="true">→</span></a>
+    </article>
+
+    <article class="event-card" data-category="cultural">
+      <span class="status-badge open">Open</span>
+      <div class="category-label">CULTURAL</div>
+      <h3>Rhythm &amp; Roots Fest</h3>
+      <p class="event-meta"><strong>Date &amp; Time:</strong> 20 Aug 2026, 5:00 PM</p>
+      <p class="event-meta"><strong>Venue:</strong> Main Auditorium</p>
+      <p class="event-desc">Music, dance and stage performances bringing students from different departments together.</p>
+      <a href="#register" class="register-btn">Reserve Seat <span aria-hidden="true">→</span></a>
+    </article>
+
+    <article class="event-card" data-category="placement">
+      <span class="status-badge filling">Filling Fast</span>
+      <div class="category-label">CAREER</div>
+      <h3>Career Launch Workshop</h3>
+      <p class="event-meta"><strong>Date &amp; Time:</strong> 23 Aug 2026, 10:00 AM</p>
+      <p class="event-meta"><strong>Venue:</strong> Seminar Hall 2</p>
+      <p class="event-desc">Practice aptitude, group discussions and interview skills with the Training &amp; Placement team.</p>
+      <a href="#register" class="register-btn">Reserve Seat <span aria-hidden="true">→</span></a>
+    </article>
+
+    <article class="event-card" data-category="sports">
+      <span class="status-badge closed">Closed</span>
+      <div class="category-label">SPORTS</div>
+      <h3>Inter-Department Sports Meet</h3>
+      <p class="event-meta"><strong>Date &amp; Time:</strong> 12 Aug 2026, 7:00 AM</p>
+      <p class="event-meta"><strong>Venue:</strong> University Sports Ground</p>
+      <p class="event-desc">Track and field competitions across departments. Registration has already reached its closing stage.</p>
+      <span class="register-btn disabled">Registration Closed</span>
+    </article>
+  </div>
+</section>
+
+<section class="register" id="register">
+  <div class="section-heading centered">
+    <p class="section-kicker">SECURE YOUR PLACE</p>
+    <h2 class="section-title">Event Registration</h2>
+    <p class="section-sub">Enter your student details and select the event you want to attend.</p>
+  </div>
+  <form class="reg-form" action="#" method="post">
+    <div class="form-row"><label for="fullname">Student Name</label><input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required></div>
+    <div class="form-row"><label for="regno">Register Number</label><input type="text" id="regno" name="regno" placeholder="e.g. 21230XXXXX" required></div>
+    <div class="form-row"><label for="department">Department</label><select id="department" name="department" required><option value="" disabled selected>Select department</option><option>CSE</option><option>ECE</option><option>Mechanical</option><option>Civil</option><option>IT</option></select></div>
+    <div class="form-row"><label for="email">Email Address</label><input type="email" id="email" name="email" placeholder="you@saveetha.ac.in" required></div>
+    <div class="form-row full-width"><label for="event-select">Select Event</label><select id="event-select" name="event-select" required><option value="" disabled selected>Choose an event</option><option>CodeForge Innovation Sprint</option><option>Rhythm &amp; Roots Fest</option><option>Career Launch Workshop</option></select></div>
+    <button class="submit-btn" type="submit">Confirm Registration</button>
+  </form>
+</section>
+</main>
+
+<footer class="site-footer" id="footer-info">
+  <div class="footer-inner">
+    <div class="footer-col"><strong>SIMATS Engineering</strong><p>Saveetha Nagar, Thandalam, Chennai – 602105</p></div>
+    <div class="footer-col"><strong>Contact</strong><p>events@simats.ac.in</p><p>+91 44 2681 1000</p></div>
+    <div class="footer-col"><strong>Quick Links</strong><p><a href="#events">Event Line-up</a></p><p><a href="#register">Registration</a></p><p><a href="#top">Back to Top</a></p></div>
+  </div>
+  <p class="copyright">© 2026 SIMATS Engineering. All rights reserved.</p>
+</footer>
+<a href="#register" class="help-btn" title="Jump to registration">Register</a>
+</body>
+</html>
