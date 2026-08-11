@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTML Form Method Demo</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 30px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .box {
+            border: 1px solid #cccccc;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+        }
+
+        label {
+            display: inline-block;
+            width: 120px;
+            margin-top: 10px;
+        }
+
+        input {
+            padding: 8px;
+            margin-top: 10px;
+            width: 250px;
+        }
+
+        button, input[type="submit"] {
+            padding: 10px 18px;
+            margin-top: 15px;
+            width: auto;
+            cursor: pointer;
+        }
+
+        .note {
+            background-color: #f8f8f8;
+            padding: 12px;
+            border-left: 5px solid #555555;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>HTML Form Method Demo</h1>
+
+<div class="note">
+    <b>Note:</b> HTML forms directly support only GET and POST methods.
+</div>
+
+<!-- GET FORM DEMO -->
+<div class="box">
+    <h2>1. GET Method Demo</h2>
+
+    <p>
+        GET method sends form data through the URL.
+        It is used for searching and viewing information.
+    </p>
+
+    <form action="form_method_demo.html" method="get">
+        <label>Name:</label>
+        <input type="text" name="student_name" placeholder="Enter student name">
+        <br>
+
+        <label>Department:</label>
+        <input type="text" name="department" placeholder="Enter department">
+        <br>
+
+        <input type="submit" value="Submit Using GET">
+    </form>
+
+    <p><b>Observation:</b> After clicking submit, check the browser address bar.</p>
+    <p>Example URL:</p>
+    <p><code>form_method_demo.html?student_name=Arun&department=CSE</code></p>
+</div>
+
+<!-- POST FORM DEMO -->
+<div class="box">
+    <h2>2. POST Method Demo</h2>
+
+    <p>
+        POST method sends form data inside the request body.
+        It is used for login, registration, feedback, and sensitive data.
+    </p>
+
+    <form action="form_method_demo.html" method="post">
+        <label>Email:</label>
+        <input type="email" name="email" placeholder="Enter email">
+        <br>
+
+        <label>Password:</label>
+        <input type="password" name="password" placeholder="Enter password">
+        <br>
+
+        <input type="submit" value="Submit Using POST">
+    </form>
+
+    <p><b>Observation:</b> In POST method, data will not be visible in the URL.</p>
+</div>
+
+<!-- SIMPLE EXPLANATION -->
+<div class="box">
+    <h2>GET vs POST Simple Difference</h2>
+
+    <table border="1" cellpadding="10" cellspacing="0">
+        <tr>
+            <th>Feature</th>
+            <th>GET</th>
+            <th>POST</th>
+        </tr>
+
+        <tr>
+            <td>Purpose</td>
+            <td>To get or retrieve data</td>
+            <td>To send or submit data</td>
+        </tr>
+
+        <tr>
+            <td>Data visibility</td>
+            <td>Data is visible in URL</td>
+            <td>Data is not visible in URL</td>
+        </tr>
+
+        <tr>
+            <td>Security</td>
+            <td>Less secure</td>
+            <td>More secure than GET</td>
+        </tr>
+
+        <tr>
+            <td>Example</td>
+            <td>Search form</td>
+            <td>Login form</td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
