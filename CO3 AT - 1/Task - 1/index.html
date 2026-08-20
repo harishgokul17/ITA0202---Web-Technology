@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Registration Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Department of Records</p>
+    <h1>Student Registration</h1>
+    <p class="subtitle">Fill in the details below to preview your profile instantly</p>
+  </header>
+
+  <div class="card">
+    <div class="field">
+      <label for="name">Name</label>
+      <input type="text" id="name" placeholder="e.g. Ananya Rao">
+    </div>
+
+    <div class="field">
+      <label for="regno">Register Number</label>
+      <input type="text" id="regno" placeholder="e.g. 123456789" inputmode="numeric" maxlength="9" pattern="\d{9}">
+    </div>
+
+    <div class="field">
+      <label for="dept">Department</label>
+      <select id="dept">
+        <option value="">Select department</option>
+        <option value="Computer Science Engineering">Computer Science Engineering</option>
+        <option value="Information Technology">Information Technology</option>
+        <option value="Electronics & Communication Engineering">Electronics & Communication Engineering</option>
+        <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering</option>
+        <option value="Mechanical Engineering">Mechanical Engineering</option>
+        <option value="Civil Engineering">Civil Engineering</option>
+        <option value="Chemical Engineering">Chemical Engineering</option>
+        <option value="Biomedical Engineering">Biomedical Engineering</option>
+        <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="year">Year of Study</label>
+      <select id="year">
+        <option value="">Select year</option>
+        <option value="1st Year">1st Year</option>
+        <option value="2nd Year">2nd Year</option>
+        <option value="3rd Year">3rd Year</option>
+        <option value="4th Year">4th Year</option>
+      </select>
+    </div>
+
+    <div class="btn-row">
+      <button id="displayBtn">Display Profile</button>
+      <button id="removeBtn">Remove</button>
+    </div>
+
+    <p class="error" id="errorMsg">Please fill in every field before displaying the profile.</p>
+  </div>
+
+  <div id="profileArea"></div>
+
+  <footer>Built with DOM methods &middot; updates instantly, no page reload</footer>
+</div>
+
+<script>
+  // Grab form elements using getElementById
+  const nameInput = document.getElementById('name');
+  const regnoInput = document.getElementById('regno');
+  const deptInput = document.getElementById('dept');
+  const yearInput = document.getElementById('year');
+
+  const displayBtn = document.getElementById('displayBtn');
+  const removeBtn = document.getElementById('removeBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const profileArea = document.getElementById('profileArea');
+
+  // Allow digits only in the Register Number field, capped at 9 characters
+  regnoInput.addEventListener('input', function(){
+    regnoInput.value = regnoInput.value.replace(/\D/g, '').slice(0, 9);
+  });
+
+  // Helper to build one cell of the profile grid
+  function buildCell(label, value){
+    const cell = document.createElement('div');
+
+    const k = document.createElement('span');
+    k.classList.add('k');
+    k.textContent = label;
+
+    const v = document.createElement('span');
+    v.classList.add('v');
+    v.textContent = value;
+
+    cell.appendChild(k);
+    cell.appendChild(v);
+    return cell;
+  }
+
+  // DISPLAY: read values, validate, and build the profile card dynamically
+  displayBtn.addEventListener('click', function(){
+    const name = nameInput.value.trim();
+    const regno = regnoInput.value.trim();
+    const dept = deptInput.value;
+    const year = yearInput.value;
+
+    if(!name || !regno || !dept || !year){
+      errorMsg.textContent = 'Please fill in every field before displaying the profile.';
+      errorMsg.style.display = 'block';
+      return;
+    }
+
+    if(!/^\d{9}$/.test(regno)){
+      errorMsg.textContent = 'Register Number must be exactly 9 digits.';
+      errorMsg.style.display = 'block';
+      return;
+    }
+
+    errorMsg.style.display = 'none';
+
+    // Clear any existing profile before adding a new one
+    profileArea.textContent = '';
+
+    const card = document.createElement('div');
+    card.classList.add('profile-card');
+
+    const tag = document.createElement('p');
+    tag.classList.add('profile-tag');
+    tag.textContent = 'Registered Student';
+
+    const heading = document.createElement('h2');
+    heading.classList.add('profile-name');
+    heading.textContent = name;
+
+    const grid = document.createElement('div');
+    grid.classList.add('profile-grid');
+    grid.appendChild(buildCell('Register Number', regno));
+    grid.appendChild(buildCell('Department', dept));
+    grid.appendChild(buildCell('Year of Study', year));
+    grid.appendChild(buildCell('Status', 'Active'));
+
+    card.appendChild(tag);
+    card.appendChild(heading);
+    card.appendChild(grid);
+
+    profileArea.appendChild(card);
+  });
+
+  // REMOVE: clear the generated profile from the DOM
+  removeBtn.addEventListener('click', function(){
+    const existingCard = profileArea.querySelector('.profile-card');
+    if(existingCard){
+      existingCard.remove();
+    }
+    errorMsg.style.display = 'none';
+  });
+</script>
+
+</body>
+</html>
