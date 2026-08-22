@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?xml-stylesheet type="text/xsl" href="courses.xsl"?>
+
+<courses>
+
+    <course id="C101">
+        <code>WEB301</code>
+        <name>Web Technology</name>
+        <faculty>Dr. Arun</faculty>
+        <students>58</students>
+        <credits>4</credits>
+        <type>Theory</type>
+    </course>
+
+    <course id="C102">
+        <code>AI302</code>
+        <name>Artificial Intelligence</name>
+        <faculty>Dr. Meena</faculty>
+        <students>72</students>
+        <credits>4</credits>
+        <type>Theory</type>
+    </course>
+
+    <course id="C103">
+        <code>WEB303</code>
+        <name>Web Technology Laboratory</name>
+        <faculty>Dr. Ravi</faculty>
+        <students>36</students>
+        <credits>2</credits>
+        <type>Practical</type>
+    </course>
+
+    <course id="C104">
+        <code>ML304</code>
+        <name>Machine Learning</name>
+        <faculty>Dr. Priya</faculty>
+        <students>64</students>
+        <credits>4</credits>
+        <type>Theory</type>
+    </course>
+
+    <course id="C105">
+        <code>DB305</code>
+        <name>Database Systems</name>
+        <faculty>Dr. Kumar</faculty>
+        <students>42</students>
+        <credits>3</credits>
+        <type>Theory</type>
+    </course>
+
+</courses>
