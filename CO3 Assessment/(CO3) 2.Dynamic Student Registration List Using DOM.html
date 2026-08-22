@@ -1,0 +1,1083 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dynamic Student Registration</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 40px 20px;
+            background:
+                radial-gradient(circle at top left, #dbeafe, transparent 35%),
+                radial-gradient(circle at bottom right, #e0e7ff, transparent 35%),
+                #f8fafc;
+            color: #1e293b;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        /* ---------- Header ---------- */
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header .icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            font-size: 32px;
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
+        }
+
+        .header h1 {
+            font-size: 34px;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        /* ---------- Main Grid ---------- */
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .card-title span {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 18px;
+        }
+
+        .card-title h2 {
+            font-size: 20px;
+            color: #0f172a;
+        }
+
+        /* ---------- Form ---------- */
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+            background: #f8fafc;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #2563eb;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        /* ---------- Buttons ---------- */
+
+        .btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: white;
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-clear {
+            margin-top: 10px;
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-clear:hover {
+            background: #fecaca;
+        }
+
+        /* ---------- Statistics ---------- */
+
+        .stats {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .stat-box strong {
+            display: block;
+            font-size: 24px;
+            color: #2563eb;
+        }
+
+        .stat-box small {
+            color: #64748b;
+        }
+
+        /* ---------- Student List ---------- */
+
+        #studentList {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .student-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 17px;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            background: white;
+            transition: 0.25s;
+            animation: slideIn 0.35s ease;
+        }
+
+        .student-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+            border-color: #bfdbfe;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        .student-details h3 {
+            font-size: 16px;
+            margin-bottom: 4px;
+            color: #0f172a;
+        }
+
+        .student-details p {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .remove-btn {
+            border: none;
+            padding: 9px 13px;
+            border-radius: 8px;
+            background: #fff1f2;
+            color: #e11d48;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .remove-btn:hover {
+            background: #ffe4e6;
+            transform: scale(1.05);
+        }
+
+        /* ---------- Empty State ---------- */
+
+        .empty-state {
+            text-align: center;
+            padding: 45px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state .empty-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state h3 {
+            color: #475569;
+            margin-bottom: 5px;
+        }
+
+        /* ---------- Message ---------- */
+
+        #message {
+            min-height: 22px;
+            margin-top: 12px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .success {
+            color: #16a34a;
+        }
+
+        .error {
+            color: #dc2626;
+        }
+
+        /* ---------- Animation ---------- */
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ---------- Responsive ---------- */
+
+        @media (max-width: 800px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 27px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            body {
+                padding: 25px 12px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .student-card {
+                align-items: flex-start;
+            }
+
+            .student-info {
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="icon">
+            🎓
+        </div>
+
+        <h1>Student Registration</h1>
+
+        <p>
+            Dynamically add, manage and remove student records using DOM
+        </p>
+
+    </header>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <div class="main-grid">
+
+
+        <!-- ================= REGISTRATION FORM ================= -->
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <span>➕</span>
+
+                <h2>Add Student</h2>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="studentName">
+                    Student Name
+                </label>
+
+                <input
+                    type="text"
+                    id="studentName"
+                    placeholder="Enter student name"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="registerNumber">
+                    Register Number
+                </label>
+
+                <input
+                    type="text"
+                    id="registerNumber"
+                    placeholder="Enter register number"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="department">
+                    Department
+                </label>
+
+                <select id="department">
+
+                    <option value="">
+                        Select Department
+                    </option>
+
+                    <option value="Information Technology">
+                        Information Technology
+                    </option>
+
+                    <option value="Computer Science Engineering">
+                        Computer Science Engineering
+                    </option>
+
+                    <option value="Electronics and Communication Engineering">
+                        Electronics and Communication Engineering
+                    </option>
+
+                    <option value="Electrical and Electronics Engineering">
+                        Electrical and Electronics Engineering
+                    </option>
+
+                    <option value="Mechanical Engineering">
+                        Mechanical Engineering
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="btn btn-add"
+                onclick="addStudent()"
+            >
+                ➕ Add Student
+            </button>
+
+
+            <button
+                class="btn btn-clear"
+                onclick="clearAllStudents()"
+            >
+                🗑 Clear All
+            </button>
+
+
+            <div id="message"></div>
+
+        </div>
+
+
+        <!-- ================= STUDENT LIST ================= -->
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <span>👨‍🎓</span>
+
+                <h2>Registered Students</h2>
+
+            </div>
+
+
+            <!-- Statistics -->
+
+            <div class="stats">
+
+                <div class="stat-box">
+
+                    <strong id="studentCount">
+                        0
+                    </strong>
+
+                    <small>
+                        Total Students
+                    </small>
+
+                </div>
+
+                <div class="stat-box">
+
+                    <strong id="departmentCount">
+                        0
+                    </strong>
+
+                    <small>
+                        Departments
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- Dynamic Student List -->
+
+            <div id="studentList">
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        📋
+                    </div>
+
+                    <h3>
+                        No Students Registered
+                    </h3>
+
+                    <p>
+                        Add a student using the form to get started.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /*
+    ==========================================================
+       DYNAMIC STUDENT REGISTRATION SYSTEM
+    ==========================================================
+    */
+
+
+    // --------------------------------------------------------
+    // Get the main student list element
+    // --------------------------------------------------------
+
+    const studentList = document.getElementById("studentList");
+
+
+    // Array to store student information
+
+    let students = [];
+
+
+    // --------------------------------------------------------
+    // ADD STUDENT
+    // --------------------------------------------------------
+
+    function addStudent() {
+
+        // Get values from input fields
+
+        const name =
+            document.getElementById("studentName").value.trim();
+
+        const registerNumber =
+            document.getElementById("registerNumber").value.trim();
+
+        const department =
+            document.getElementById("department").value;
+
+
+        // Validation
+
+        if (name === "" ||
+            registerNumber === "" ||
+            department === "") {
+
+            showMessage(
+                "Please fill in all student details.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        // Check duplicate register number
+
+        const duplicate = students.some(function(student) {
+
+            return student.registerNumber === registerNumber;
+
+        });
+
+
+        if (duplicate) {
+
+            showMessage(
+                "Register number already exists.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        // Create student object
+
+        const student = {
+
+            name: name,
+
+            registerNumber: registerNumber,
+
+            department: department
+
+        };
+
+
+        // Store student
+
+        students.push(student);
+
+
+        // Create student card
+
+        createStudentElement(student);
+
+
+        // Update statistics
+
+        updateStatistics();
+
+
+        // Clear input fields
+
+        document.getElementById("studentName").value = "";
+
+        document.getElementById("registerNumber").value = "";
+
+        document.getElementById("department").value = "";
+
+
+        // Display success message
+
+        showMessage(
+            "Student added successfully!",
+            "success"
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // CREATE STUDENT ELEMENT
+    // --------------------------------------------------------
+
+    function createStudentElement(student) {
+
+
+        // Remove empty state if it exists
+
+        const emptyState =
+            studentList.querySelector(".empty-state");
+
+        if (emptyState) {
+
+            emptyState.remove();
+
+        }
+
+
+        /*
+        --------------------------------------------------------
+        createElement()
+        --------------------------------------------------------
+        Used to dynamically create HTML elements.
+        */
+
+
+        const studentCard =
+            document.createElement("div");
+
+        studentCard.classList.add("student-card");
+
+
+        // Create student information container
+
+        const studentInfo =
+            document.createElement("div");
+
+        studentInfo.classList.add("student-info");
+
+
+        // Create avatar
+
+        const avatar =
+            document.createElement("div");
+
+        avatar.classList.add("avatar");
+
+
+        // Get first letter of student name
+
+        avatar.textContent =
+            student.name.charAt(0).toUpperCase();
+
+
+        // Create details container
+
+        const details =
+            document.createElement("div");
+
+        details.classList.add("student-details");
+
+
+        // Create student name
+
+        const nameElement =
+            document.createElement("h3");
+
+        nameElement.textContent =
+            student.name;
+
+
+        // Create register number and department
+
+        const detailsElement =
+            document.createElement("p");
+
+        detailsElement.textContent =
+            "Register No: " +
+            student.registerNumber +
+            " | " +
+            student.department;
+
+
+        /*
+        --------------------------------------------------------
+        appendChild()
+        --------------------------------------------------------
+        Used to attach dynamically created elements.
+        */
+
+
+        details.appendChild(nameElement);
+
+        details.appendChild(detailsElement);
+
+        studentInfo.appendChild(avatar);
+
+        studentInfo.appendChild(details);
+
+
+        // Create Remove button
+
+        const removeButton =
+            document.createElement("button");
+
+        removeButton.textContent =
+            "Remove";
+
+        removeButton.classList.add("remove-btn");
+
+
+        // Attach remove functionality
+
+        removeButton.onclick =
+            function() {
+
+                removeStudent(student, studentCard);
+
+            };
+
+
+        // Add information and button to card
+
+        studentCard.appendChild(studentInfo);
+
+        studentCard.appendChild(removeButton);
+
+
+        // Add card to student list
+
+        studentList.appendChild(studentCard);
+
+
+        /*
+        --------------------------------------------------------
+        children
+        --------------------------------------------------------
+        Demonstration:
+        studentList.children.length
+        gives the number of direct child elements.
+        */
+
+
+        console.log(
+            "Number of student elements:",
+            studentList.children.length
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // REMOVE STUDENT
+    // --------------------------------------------------------
+
+    function removeStudent(student, studentCard) {
+
+
+        /*
+        --------------------------------------------------------
+        parentElement
+        --------------------------------------------------------
+        Find the parent element of the selected card.
+        */
+
+
+        const parent =
+            studentCard.parentElement;
+
+
+        /*
+        --------------------------------------------------------
+        remove()
+        --------------------------------------------------------
+        Remove the selected student card from the DOM.
+        */
+
+
+        studentCard.remove();
+
+
+        // Remove student from JavaScript array
+
+        students =
+            students.filter(function(item) {
+
+                return item !== student;
+
+            });
+
+
+        // If no students remain
+
+        if (parent.children.length === 0) {
+
+            showEmptyState();
+
+        }
+
+
+        // Update statistics
+
+        updateStatistics();
+
+
+        showMessage(
+            "Student removed successfully.",
+            "success"
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // CLEAR ALL STUDENTS
+    // --------------------------------------------------------
+
+    function clearAllStudents() {
+
+
+        if (students.length === 0) {
+
+            showMessage(
+                "There are no students to remove.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        /*
+        --------------------------------------------------------
+        children
+        --------------------------------------------------------
+        Access all child elements of studentList.
+        */
+
+
+        const studentElements =
+            studentList.children;
+
+
+        /*
+        --------------------------------------------------------
+        remove()
+        --------------------------------------------------------
+        Remove each dynamically generated student card.
+        */
+
+
+        while (studentElements.length > 0) {
+
+            studentElements[0].remove();
+
+        }
+
+
+        // Empty JavaScript array
+
+        students = [];
+
+
+        // Show empty state
+
+        showEmptyState();
+
+
+        // Update statistics
+
+        updateStatistics();
+
+
+        showMessage(
+            "All student records have been cleared.",
+            "success"
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // SHOW EMPTY STATE
+    // --------------------------------------------------------
+
+    function showEmptyState() {
+
+
+        /*
+        createElement()
+        is again used to dynamically create
+        the empty state.
+        */
+
+
+        const emptyState =
+            document.createElement("div");
+
+        emptyState.classList.add("empty-state");
+
+
+        const icon =
+            document.createElement("div");
+
+        icon.classList.add("empty-icon");
+
+        icon.textContent = "📋";
+
+
+        const heading =
+            document.createElement("h3");
+
+        heading.textContent =
+            "No Students Registered";
+
+
+        const paragraph =
+            document.createElement("p");
+
+        paragraph.textContent =
+            "Add a student using the form to get started.";
+
+
+        /*
+        appendChild()
+        is used to build the empty-state structure.
+        */
+
+
+        emptyState.appendChild(icon);
+
+        emptyState.appendChild(heading);
+
+        emptyState.appendChild(paragraph);
+
+
+        studentList.appendChild(emptyState);
+
+    }
+
+
+    // --------------------------------------------------------
+    // UPDATE STATISTICS
+    // --------------------------------------------------------
+
+    function updateStatistics() {
+
+
+        // Update total students
+
+        document.getElementById("studentCount").textContent =
+            students.length;
+
+
+        // Find unique departments
+
+        const departments =
+            new Set(
+                students.map(function(student) {
+
+                    return student.department;
+
+                })
+            );
+
+
+        document.getElementById("departmentCount").textContent =
+            departments.size;
+
+    }
+
+
+    // --------------------------------------------------------
+    // DISPLAY MESSAGE
+    // --------------------------------------------------------
+
+    function showMessage(text, type) {
+
+        const message =
+            document.getElementById("message");
+
+
+        message.textContent = text;
+
+        message.className = type;
+
+
+        // Automatically remove message
+
+        setTimeout(function() {
+
+            message.textContent = "";
+
+            message.className = "";
+
+        }, 2500);
+
+    }
+
+</script>
+
+</body>
+</html>
+```

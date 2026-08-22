@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DOM-Based Student Profile Manipulation</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e0e7ff, #f8fafc);
+            color: #1e293b;
+            padding: 30px;
+        }
+
+        .main-container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        /* Header */
+        .page-header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.25);
+        }
+
+        .page-header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            opacity: 0.9;
+            font-size: 15px;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 25px;
+        }
+
+        /* Profile Card */
+        .profile-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 18px;
+            color: #334155;
+        }
+
+        .profile {
+            background: #eef2ff;
+            border: 2px solid #c7d2fe;
+            border-radius: 18px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .profile:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-top {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .avatar {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            background: white;
+            color: #4f46e5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 34px;
+            font-weight: bold;
+            border: 4px solid rgba(255,255,255,0.7);
+        }
+
+        .profile-top h2 {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        .profile-top p {
+            opacity: 0.9;
+        }
+
+        .profile-details {
+            padding: 25px;
+        }
+
+        .detail {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .detail:last-child {
+            border-bottom: none;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #e0e7ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #dcfce7;
+            color: #15803d;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Controls */
+        .controls {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px #e0e7ff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.3s;
+        }
+
+        .primary-btn {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+        }
+
+        .color-btn {
+            background: #0f766e;
+            color: white;
+        }
+
+        .color-btn:hover {
+            background: #115e59;
+        }
+
+        .background-btn {
+            background: #ea580c;
+            color: white;
+        }
+
+        .background-btn:hover {
+            background: #c2410c;
+        }
+
+        .toggle-btn {
+            background: #334155;
+            color: white;
+        }
+
+        .toggle-btn:hover {
+            background: #1e293b;
+        }
+
+        .reset-btn {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+        }
+
+        .reset-btn:hover {
+            background: #e2e8f0;
+        }
+
+        /* Status */
+        .status {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 10px;
+            background: #f0fdf4;
+            color: #15803d;
+            font-size: 13px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        /* Hidden Profile */
+        .profile.hidden {
+            display: none;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+            body {
+                padding: 15px;
+            }
+
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="main-container">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>🎓 DOM-Based Student Profile</h1>
+        <p>Interactive profile manipulation using JavaScript DOM methods</p>
+    </div>
+
+
+    <div class="content">
+
+        <!-- PROFILE SECTION -->
+        <div class="profile-section">
+
+            <h3 class="section-title">Student Profile Preview</h3>
+
+            <div id="profile" class="profile">
+
+                <!-- Profile Header -->
+                <div class="profile-top">
+
+                    <div class="avatar" id="avatar">
+                        H
+                    </div>
+
+                    <div>
+                        <h2 id="profileHeading">
+                            Student Information
+                        </h2>
+
+                        <p id="welcomeText">
+                            Welcome to your student profile
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- Profile Details -->
+                <div class="profile-details">
+
+                    <div class="detail">
+
+                        <div class="icon">👤</div>
+
+                        <div>
+                            <div class="detail-label">
+                                STUDENT NAME
+                            </div>
+
+                            <div class="detail-value"
+                                 id="studentName">
+                                Harish T
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <div class="icon">🆔</div>
+
+                        <div>
+                            <div class="detail-label">
+                                REGISTER NUMBER
+                            </div>
+
+                            <div class="detail-value"
+                                 id="studentReg">
+                                192521373
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <div class="icon">💻</div>
+
+                        <div>
+                            <div class="detail-label">
+                                DEPARTMENT
+                            </div>
+
+                            <div class="detail-value"
+                                 id="studentDept">
+                                Information Technology
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <div class="icon">📚</div>
+
+                        <div>
+                            <div class="detail-label">
+                                YEAR OF STUDY
+                            </div>
+
+                            <div class="detail-value">
+                                II Year
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <div class="icon">🟢</div>
+
+                        <div>
+                            <div class="detail-label">
+                                STATUS
+                            </div>
+
+                            <span class="badge" id="studentStatus">
+                                ACTIVE STUDENT
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTROL PANEL -->
+        <div class="controls">
+
+            <h3 class="section-title">
+                ⚙️ Profile Controls
+            </h3>
+
+
+            <!-- Heading -->
+            <div class="control-group">
+
+                <label for="headingInput">
+                    Change Profile Heading
+                </label>
+
+                <input
+                    type="text"
+                    id="headingInput"
+                    placeholder="Enter new heading">
+
+                <button
+                    class="primary-btn"
+                    id="headingButton">
+                    ✏️ Change Heading
+                </button>
+
+            </div>
+
+
+            <!-- Text Color -->
+            <div class="control-group">
+
+                <label for="textColor">
+                    Change Text Colour
+                </label>
+
+                <select id="textColor">
+
+                    <option value="#1e293b">
+                        Default Dark
+                    </option>
+
+                    <option value="#2563eb">
+                        Blue
+                    </option>
+
+                    <option value="#15803d">
+                        Green
+                    </option>
+
+                    <option value="#dc2626">
+                        Red
+                    </option>
+
+                    <option value="#7c3aed">
+                        Purple
+                    </option>
+
+                    <option value="#c2410c">
+                        Orange
+                    </option>
+
+                </select>
+
+                <button
+                    class="color-btn"
+                    id="textButton">
+                    🎨 Apply Text Colour
+                </button>
+
+            </div>
+
+
+            <!-- Background -->
+            <div class="control-group">
+
+                <label for="backgroundColor">
+                    Change Profile Background
+                </label>
+
+                <select id="backgroundColor">
+
+                    <option value="#eef2ff">
+                        Light Blue
+                    </option>
+
+                    <option value="#ecfdf5">
+                        Light Green
+                    </option>
+
+                    <option value="#fff7ed">
+                        Light Orange
+                    </option>
+
+                    <option value="#fef2f2">
+                        Light Red
+                    </option>
+
+                    <option value="#faf5ff">
+                        Light Purple
+                    </option>
+
+                    <option value="#f8fafc">
+                        Light Grey
+                    </option>
+
+                </select>
+
+                <button
+                    class="background-btn"
+                    id="backgroundButton">
+                    🖌️ Apply Background
+                </button>
+
+            </div>
+
+
+            <!-- Visibility -->
+            <div class="control-group">
+
+                <label>
+                    Profile Visibility
+                </label>
+
+                <button
+                    class="toggle-btn"
+                    id="toggleButton">
+                    👁️ Hide Profile
+                </button>
+
+            </div>
+
+
+            <!-- Reset -->
+            <button
+                class="reset-btn"
+                id="resetButton">
+                🔄 Reset Profile
+            </button>
+
+
+            <!-- Status -->
+            <div class="status" id="statusMessage">
+
+                <span class="status-dot"></span>
+
+                Profile is currently visible
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+        DOM Manipulation • Event Handling • Dynamic Styling
+    </div>
+
+</div>
+
+
+<script>
+
+    /*
+       DOM-BASED STUDENT PROFILE MANIPULATION
+
+       Concepts used:
+       1. getElementById()
+       2. querySelector()
+       3. textContent
+       4. style
+       5. classList
+       6. setAttribute()
+       7. addEventListener()
+    */
+
+
+    // ==========================================
+    // SELECTING ELEMENTS USING getElementById()
+    // ==========================================
+
+    const profile = document.getElementById("profile");
+
+    const headingInput =
+        document.getElementById("headingInput");
+
+    const headingButton =
+        document.getElementById("headingButton");
+
+    const textColor =
+        document.getElementById("textColor");
+
+    const textButton =
+        document.getElementById("textButton");
+
+    const backgroundColor =
+        document.getElementById("backgroundColor");
+
+    const backgroundButton =
+        document.getElementById("backgroundButton");
+
+    const toggleButton =
+        document.getElementById("toggleButton");
+
+    const resetButton =
+        document.getElementById("resetButton");
+
+    const statusMessage =
+        document.getElementById("statusMessage");
+
+
+    // ==========================================
+    // USING querySelector()
+    // ==========================================
+
+    const profileHeading =
+        document.querySelector("#profileHeading");
+
+    const welcomeText =
+        document.querySelector("#welcomeText");
+
+
+    // ==========================================
+    // CHANGE HEADING
+    // ==========================================
+
+    headingButton.addEventListener("click", function() {
+
+        const newHeading =
+            headingInput.value.trim();
+
+        if (newHeading === "") {
+
+            alert("Please enter a heading.");
+
+            return;
+        }
+
+        // textContent
+        profileHeading.textContent = newHeading;
+
+        // setAttribute()
+        profileHeading.setAttribute(
+            "title",
+            "Modified using DOM setAttribute()"
+        );
+
+        // Change welcome message
+        welcomeText.textContent =
+            "Your profile heading has been updated successfully.";
+
+        // Clear input
+        headingInput.value = "";
+
+        statusMessage.textContent =
+            "✓ Profile heading updated successfully";
+    });
+
+
+    // ==========================================
+    // CHANGE TEXT COLOUR
+    // ==========================================
+
+    textButton.addEventListener("click", function() {
+
+        const selectedColor =
+            textColor.value;
+
+        // style property
+        profile.style.color = selectedColor;
+
+        statusMessage.textContent =
+            "✓ Profile text colour changed";
+    });
+
+
+    // ==========================================
+    // CHANGE BACKGROUND COLOUR
+    // ==========================================
+
+    backgroundButton.addEventListener(
+        "click",
+        function() {
+
+            const selectedBackground =
+                backgroundColor.value;
+
+            // style property
+            profile.style.backgroundColor =
+                selectedBackground;
+
+            statusMessage.textContent =
+                "✓ Profile background changed";
+        }
+    );
+
+
+    // ==========================================
+    // SHOW / HIDE PROFILE
+    // ==========================================
+
+    toggleButton.addEventListener(
+        "click",
+        function() {
+
+            // classList.toggle()
+            profile.classList.toggle("hidden");
+
+            if (profile.classList.contains("hidden")) {
+
+                // textContent
+                toggleButton.textContent =
+                    "👁️ Show Profile";
+
+                statusMessage.textContent =
+                    "Profile is currently hidden";
+
+                statusMessage.style.backgroundColor =
+                    "#fff7ed";
+
+                statusMessage.style.color =
+                    "#c2410c";
+
+            } else {
+
+                toggleButton.textContent =
+                    "👁️ Hide Profile";
+
+                statusMessage.textContent =
+                    "✓ Profile is currently visible";
+
+                statusMessage.style.backgroundColor =
+                    "#f0fdf4";
+
+                statusMessage.style.color =
+                    "#15803d";
+            }
+        }
+    );
+
+
+    // ==========================================
+    // RESET PROFILE
+    // ==========================================
+
+    resetButton.addEventListener(
+        "click",
+        function() {
+
+            // Restore heading
+            profileHeading.textContent =
+                "Student Information";
+
+            // Restore welcome text
+            welcomeText.textContent =
+                "Welcome to your student profile";
+
+            // Restore colours using style
+            profile.style.color =
+                "#1e293b";
+
+            profile.style.backgroundColor =
+                "#eef2ff";
+
+            // Remove hidden class
+            profile.classList.remove("hidden");
+
+            // Restore button
+            toggleButton.textContent =
+                "👁️ Hide Profile";
+
+            // Clear input
+            headingInput.value = "";
+
+            // Restore selections
+            textColor.value = "#1e293b";
+            backgroundColor.value = "#eef2ff";
+
+            // Restore status
+            statusMessage.textContent =
+                "✓ Profile has been reset successfully";
+
+            statusMessage.style.backgroundColor =
+                "#f0fdf4";
+
+            statusMessage.style.color =
+                "#15803d";
+
+            // setAttribute()
+            profileHeading.setAttribute(
+                "title",
+                "Student Profile Heading"
+            );
+        }
+    );
+
+</script>
+
+</body>
+</html>

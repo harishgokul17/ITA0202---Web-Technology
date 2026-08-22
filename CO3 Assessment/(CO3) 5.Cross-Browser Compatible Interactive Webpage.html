@@ -1,0 +1,1931 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Cross-Browser Compatibility Center</title>
+
+
+    <style>
+
+        /* =====================================================
+           BASIC / UNIVERSAL CSS
+           These styles work in older browsers too.
+        ===================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            background: #f4f7fb;
+
+            color: #1f2937;
+
+            padding: 30px 18px;
+        }
+
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+
+        .logo {
+            width: 70px;
+            height: 70px;
+
+            margin: 0 auto 15px;
+
+            background: #2563eb;
+
+            color: white;
+
+            border-radius: 18px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 32px;
+
+            box-shadow:
+                0 10px 25px
+                rgba(37, 99, 235, 0.2);
+        }
+
+
+        .header h1 {
+            margin: 0 0 8px;
+
+            font-size: 34px;
+
+            color: #111827;
+        }
+
+
+        .header p {
+            margin: 0;
+
+            color: #6b7280;
+
+            font-size: 15px;
+        }
+
+
+        /* =====================================================
+           BROWSER STATUS
+        ===================================================== */
+
+        .browser-status {
+
+            background: white;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 16px;
+
+            padding: 20px;
+
+            margin-bottom: 25px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(0,0,0,0.05);
+        }
+
+
+        .status-left {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+        }
+
+
+        .status-icon {
+
+            width: 48px;
+            height: 48px;
+
+            border-radius: 12px;
+
+            background: #eff6ff;
+
+            color: #2563eb;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 22px;
+        }
+
+
+        .status-left h2 {
+
+            margin: 0 0 4px;
+
+            font-size: 18px;
+        }
+
+
+        .status-left p {
+
+            margin: 0;
+
+            color: #6b7280;
+
+            font-size: 13px;
+        }
+
+
+        .score {
+
+            min-width: 100px;
+
+            padding: 12px 18px;
+
+            border-radius: 12px;
+
+            background: #eff6ff;
+
+            text-align: center;
+
+            color: #1d4ed8;
+        }
+
+
+        .score strong {
+
+            display: block;
+
+            font-size: 27px;
+        }
+
+
+        .score span {
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            text-transform: uppercase;
+        }
+
+
+        /* =====================================================
+           FEATURE GRID
+        ===================================================== */
+
+        .feature-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 20px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .feature-card {
+
+            background: white;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 18px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(0,0,0,0.05);
+
+            transition:
+                transform 0.2s;
+        }
+
+
+        .feature-card:hover {
+
+            transform:
+                translateY(-3px);
+        }
+
+
+        .feature-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 15px;
+        }
+
+
+        .feature-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .feature-icon {
+
+            width: 40px;
+            height: 40px;
+
+            border-radius: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #f3f4f6;
+
+            font-size: 19px;
+        }
+
+
+        .feature-title h3 {
+
+            margin: 0;
+
+            font-size: 16px;
+
+            color: #111827;
+        }
+
+
+        .badge {
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            text-transform: uppercase;
+        }
+
+
+        .supported {
+
+            background: #dcfce7;
+
+            color: #15803d;
+        }
+
+
+        .fallback {
+
+            background: #fef3c7;
+
+            color: #b45309;
+        }
+
+
+        .unsupported {
+
+            background: #fee2e2;
+
+            color: #b91c1c;
+        }
+
+
+        .feature-description {
+
+            color: #6b7280;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            margin-bottom: 15px;
+        }
+
+
+        .technical {
+
+            background: #f8fafc;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 9px;
+
+            padding: 11px;
+
+            font-family:
+                Consolas,
+                monospace;
+
+            font-size: 12px;
+
+            color: #475569;
+
+            word-break: break-word;
+        }
+
+
+        /* =====================================================
+           STORAGE DEMO
+        ===================================================== */
+
+        .demo-card {
+
+            background: white;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(0,0,0,0.05);
+        }
+
+
+        .demo-card h2 {
+
+            margin-top: 0;
+
+            font-size: 20px;
+
+            color: #111827;
+        }
+
+
+        .demo-card > p {
+
+            color: #6b7280;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+
+        .storage-controls {
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+            margin-top: 18px;
+        }
+
+
+        .storage-input {
+
+            flex: 1;
+
+            min-width: 200px;
+
+            padding: 12px;
+
+            border:
+                1px solid #d1d5db;
+
+            border-radius: 9px;
+
+            outline: none;
+
+            font-size: 14px;
+        }
+
+
+        .storage-input:focus {
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(37,99,235,0.1);
+        }
+
+
+        button {
+
+            border: none;
+
+            border-radius: 9px;
+
+            padding: 12px 17px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s,
+                opacity 0.2s;
+        }
+
+
+        button:hover {
+
+            transform:
+                translateY(-2px);
+
+            opacity: 0.9;
+        }
+
+
+        .primary-btn {
+
+            background: #2563eb;
+
+            color: white;
+        }
+
+
+        .secondary-btn {
+
+            background: #e5e7eb;
+
+            color: #374151;
+        }
+
+
+        .storage-result {
+
+            margin-top: 18px;
+
+            padding: 14px;
+
+            border-radius: 10px;
+
+            background: #f8fafc;
+
+            border: 1px solid #e5e7eb;
+
+            font-size: 13px;
+
+            color: #475569;
+
+            min-height: 20px;
+        }
+
+
+        /* =====================================================
+           FALLBACK DEMONSTRATION
+        ===================================================== */
+
+        .fallback-panel {
+
+            padding: 18px;
+
+            border-radius: 13px;
+
+            background: #fffbeb;
+
+            border: 1px solid #fde68a;
+
+            margin-top: 20px;
+        }
+
+
+        .fallback-panel strong {
+
+            color: #92400e;
+        }
+
+
+        .fallback-panel p {
+
+            margin:
+                7px 0 0;
+
+            color: #78350f;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           CSS @SUPPORTS DEMO
+        ===================================================== */
+
+        .css-demo {
+
+            margin-top: 18px;
+
+            padding: 18px;
+
+            border-radius: 12px;
+
+            background: #f8fafc;
+
+            border: 1px solid #e5e7eb;
+        }
+
+
+        .css-feature-box {
+
+            padding: 20px;
+
+            margin-top: 12px;
+
+            background: #dbeafe;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+            color: #1e40af;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================================
+           @supports
+           Modern CSS feature detection
+        ===================================================== */
+
+        @supports (display: grid) {
+
+            .css-feature-box {
+
+                border:
+                    3px solid #2563eb;
+
+                letter-spacing:
+                    0.3px;
+            }
+        }
+
+
+        @supports not (display: grid) {
+
+            .css-feature-box {
+
+                border:
+                    3px dashed #f59e0b;
+
+                background:
+                    #fffbeb;
+
+                color:
+                    #92400e;
+            }
+        }
+
+
+        /* =====================================================
+           REPORT
+        ===================================================== */
+
+        .report {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 12px;
+
+            margin-top: 20px;
+        }
+
+
+        .report-item {
+
+            padding: 15px;
+
+            text-align: center;
+
+            background: #f8fafc;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 10px;
+        }
+
+
+        .report-item strong {
+
+            display: block;
+
+            font-size: 23px;
+
+            color: #2563eb;
+
+            margin-bottom: 4px;
+        }
+
+
+        .report-item span {
+
+            color: #6b7280;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+
+            text-align: center;
+
+            padding:
+                15px 0 5px;
+
+            color: #9ca3af;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 750px) {
+
+            .feature-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .browser-status {
+
+                align-items:
+                    flex-start;
+
+                flex-direction:
+                    column;
+            }
+
+
+            .score {
+
+                width: 100%;
+            }
+
+
+            .report {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            body {
+
+                padding:
+                    20px 12px;
+            }
+
+
+            .header h1 {
+
+                font-size: 27px;
+            }
+
+
+            .storage-controls {
+
+                flex-direction:
+                    column;
+            }
+
+
+            .storage-input,
+            button {
+
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =====================================================
+         HEADER
+    ===================================================== -->
+
+    <header class="header">
+
+        <div class="logo">
+            🌍
+        </div>
+
+        <h1>
+            Cross-Browser Compatibility Center
+        </h1>
+
+        <p>
+            Feature detection and fallback demonstration
+        </p>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         OVERALL STATUS
+    ===================================================== -->
+
+    <div class="browser-status">
+
+        <div class="status-left">
+
+            <div class="status-icon">
+                🛡️
+            </div>
+
+            <div>
+
+                <h2>
+                    Browser Compatibility Report
+                </h2>
+
+                <p id="browserMessage">
+                    Checking browser features...
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="score">
+
+            <strong id="score">
+                0%
+            </strong>
+
+            <span>
+                Compatibility
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         FEATURE CARDS
+    ===================================================== -->
+
+    <div class="feature-grid">
+
+
+        <!-- =================================================
+             LOCAL STORAGE
+        ================================================= -->
+
+        <div class="feature-card">
+
+            <div class="feature-header">
+
+                <div class="feature-title">
+
+                    <div class="feature-icon">
+                        💾
+                    </div>
+
+                    <h3>
+                        localStorage
+                    </h3>
+
+                </div>
+
+                <span
+                    class="badge"
+                    id="storageBadge"
+                >
+                    Checking
+                </span>
+
+            </div>
+
+
+            <p class="feature-description">
+
+                Checks whether the browser supports
+                Web Storage and whether data can be
+                successfully saved and retrieved.
+
+            </p>
+
+
+            <div class="technical">
+
+                Feature detection:
+                typeof Storage !== "undefined"
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             QUERY SELECTOR
+        ================================================= -->
+
+        <div class="feature-card">
+
+            <div class="feature-header">
+
+                <div class="feature-title">
+
+                    <div class="feature-icon">
+                        🔎
+                    </div>
+
+                    <h3>
+                        querySelector()
+                    </h3>
+
+                </div>
+
+                <span
+                    class="badge"
+                    id="selectorBadge"
+                >
+                    Checking
+                </span>
+
+            </div>
+
+
+            <p class="feature-description">
+
+                Checks whether the browser supports
+                CSS selector-based DOM selection.
+
+            </p>
+
+
+            <div class="technical">
+
+                Feature detection:
+                typeof document.querySelector === "function"
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             CSS @SUPPORTS
+        ================================================= -->
+
+        <div class="feature-card">
+
+            <div class="feature-header">
+
+                <div class="feature-title">
+
+                    <div class="feature-icon">
+                        🎨
+                    </div>
+
+                    <h3>
+                        CSS @supports
+                    </h3>
+
+                </div>
+
+                <span
+                    class="badge"
+                    id="cssBadge"
+                >
+                    Checking
+                </span>
+
+            </div>
+
+
+            <p class="feature-description">
+
+                Uses CSS feature queries to detect
+                whether a browser supports selected
+                CSS capabilities.
+
+            </p>
+
+
+            <div class="technical">
+
+                @supports (display: grid)
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             FALLBACK
+        ================================================= -->
+
+        <div class="feature-card">
+
+            <div class="feature-header">
+
+                <div class="feature-title">
+
+                    <div class="feature-icon">
+                        🔄
+                    </div>
+
+                    <h3>
+                        Fallback System
+                    </h3>
+
+                </div>
+
+                <span
+                    class="badge fallback"
+                >
+                    Active
+                </span>
+
+            </div>
+
+
+            <p class="feature-description">
+
+                When a feature is unavailable, the
+                webpage uses an alternative technique
+                instead of failing completely.
+
+            </p>
+
+
+            <div class="technical">
+
+                Feature Detection → Fallback → Continue
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         LOCAL STORAGE DEMONSTRATION
+    ===================================================== -->
+
+    <div class="demo-card">
+
+        <h2>
+            💾 Local Storage Demonstration
+        </h2>
+
+
+        <p>
+
+            Enter a preference below. If localStorage
+            is supported, the value will be saved in
+            the browser. Otherwise, a JavaScript
+            memory fallback will be used.
+
+        </p>
+
+
+        <div class="storage-controls">
+
+            <input
+                type="text"
+                id="storageInput"
+                class="storage-input"
+                placeholder="Enter your preferred theme..."
+            >
+
+
+            <button
+                class="primary-btn"
+                id="saveButton"
+            >
+                Save Preference
+            </button>
+
+
+            <button
+                class="secondary-btn"
+                id="loadButton"
+            >
+                Load Preference
+            </button>
+
+
+            <button
+                class="secondary-btn"
+                id="clearButton"
+            >
+                Clear
+            </button>
+
+        </div>
+
+
+        <div
+            class="storage-result"
+            id="storageResult"
+        >
+            Storage result will appear here.
+
+        </div>
+
+
+        <div class="fallback-panel">
+
+            <strong>
+                🔄 Fallback Strategy
+            </strong>
+
+            <p id="fallbackMessage">
+
+                Checking whether localStorage is available...
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CSS SUPPORTS DEMONSTRATION
+    ===================================================== -->
+
+    <div class="demo-card">
+
+        <h2>
+            🎨 CSS Feature Detection
+        </h2>
+
+
+        <p>
+
+            The box below uses
+            <strong>@supports</strong>
+            to determine whether the browser supports
+            CSS Grid.
+
+        </p>
+
+
+        <div class="css-demo">
+
+            <strong>
+                CSS @supports Result:
+            </strong>
+
+
+            <div class="css-feature-box">
+
+                CSS Grid feature detection is active.
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         COMPATIBILITY SUMMARY
+    ===================================================== -->
+
+    <div class="demo-card">
+
+        <h2>
+            📊 Compatibility Summary
+        </h2>
+
+
+        <div class="report">
+
+
+            <div class="report-item">
+
+                <strong id="supportedCount">
+                    0
+                </strong>
+
+                <span>
+                    Supported Features
+                </span>
+
+            </div>
+
+
+            <div class="report-item">
+
+                <strong id="fallbackCount">
+                    0
+                </strong>
+
+                <span>
+                    Fallbacks Available
+                </span>
+
+            </div>
+
+
+            <div class="report-item">
+
+                <strong id="testedCount">
+                    0
+                </strong>
+
+                <span>
+                    Features Tested
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <footer>
+
+        Cross-Browser Compatible Interactive Webpage
+        •
+        Feature Detection & Fallback Demonstration
+
+    </footer>
+
+
+</div>
+
+
+
+<script>
+
+
+    /* =========================================================
+       FALLBACK STORAGE
+    ========================================================= */
+
+
+    /*
+        This object acts as a temporary storage
+        mechanism if localStorage is unavailable.
+    */
+
+
+    var memoryStorage = {};
+
+
+
+    /* =========================================================
+       FEATURE DETECTION
+    ========================================================= */
+
+
+    function checkLocalStorage() {
+
+
+        /*
+            localStorage detection should not rely
+            only on "typeof Storage".
+
+            Some browsers may expose the API but
+            prevent actual storage.
+
+            Therefore, we test:
+            1. API existence
+            2. Writing
+            3. Reading
+            4. Removing
+        */
+
+
+        try {
+
+
+            if (
+                typeof Storage === "undefined" ||
+                typeof localStorage === "undefined"
+            ) {
+
+                return false;
+
+            }
+
+
+            var testKey =
+                "__browser_test__";
+
+
+            localStorage.setItem(
+                testKey,
+                "test"
+            );
+
+
+            var value =
+                localStorage.getItem(
+                    testKey
+                );
+
+
+            localStorage.removeItem(
+                testKey
+            );
+
+
+            return value === "test";
+
+
+        } catch (error) {
+
+
+            /*
+                If the browser blocks storage,
+                the fallback will be used.
+            */
+
+
+            return false;
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       QUERY SELECTOR DETECTION
+    ========================================================= */
+
+
+    function checkQuerySelector() {
+
+
+        /*
+            Check whether querySelector()
+            exists before using it.
+        */
+
+
+        return (
+            typeof document.querySelector ===
+            "function"
+        );
+
+    }
+
+
+
+    /* =========================================================
+       CSS FEATURE DETECTION
+    ========================================================= */
+
+
+    function checkCSSGrid() {
+
+
+        /*
+            CSS.supports() is a JavaScript
+            way of checking CSS support.
+
+            The CSS @supports rule is also
+            included in the stylesheet above.
+        */
+
+
+        if (
+            typeof CSS !== "undefined" &&
+            typeof CSS.supports === "function"
+        ) {
+
+            return CSS.supports(
+                "display",
+                "grid"
+            );
+
+        }
+
+
+        /*
+            Older browsers may not support
+            CSS.supports().
+
+            Return false so that the
+            fallback strategy can be used.
+        */
+
+
+        return false;
+
+    }
+
+
+
+    /* =========================================================
+       UPDATE BADGE
+    ========================================================= */
+
+
+    function updateBadge(
+        element,
+        supported,
+        fallbackAvailable
+    ) {
+
+
+        if (supported) {
+
+
+            element.textContent =
+                "Supported";
+
+
+            element.className =
+                "badge supported";
+
+
+        } else if (fallbackAvailable) {
+
+
+            element.textContent =
+                "Fallback";
+
+
+            element.className =
+                "badge fallback";
+
+
+        } else {
+
+
+            element.textContent =
+                "Not Supported";
+
+
+            element.className =
+                "badge unsupported";
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       STORAGE FUNCTIONS
+    ========================================================= */
+
+
+    function savePreference() {
+
+
+        /*
+            querySelector() is used when
+            supported.
+
+            If unavailable, getElementById()
+            provides a fallback.
+        */
+
+
+        var input;
+
+
+        if (checkQuerySelector()) {
+
+
+            input =
+                document.querySelector(
+                    "#storageInput"
+                );
+
+
+        } else {
+
+
+            input =
+                document.getElementById(
+                    "storageInput"
+                );
+
+        }
+
+
+        var value =
+            input.value;
+
+
+        if (value === "") {
+
+
+            showStorageMessage(
+                "Please enter a preference first."
+            );
+
+
+            return;
+
+        }
+
+
+        if (checkLocalStorage()) {
+
+
+            /*
+                Primary implementation
+            */
+
+
+            localStorage.setItem(
+                "userPreference",
+                value
+            );
+
+
+            showStorageMessage(
+                "✓ Preference saved using localStorage."
+            );
+
+
+        } else {
+
+
+            /*
+                Fallback implementation
+            */
+
+
+            memoryStorage.userPreference =
+                value;
+
+
+            showStorageMessage(
+                "⚠ localStorage unavailable. Preference saved using memory fallback."
+            );
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       LOAD PREFERENCE
+    ========================================================= */
+
+
+    function loadPreference() {
+
+
+        var value;
+
+
+        if (checkLocalStorage()) {
+
+
+            value =
+                localStorage.getItem(
+                    "userPreference"
+                );
+
+
+        } else {
+
+
+            value =
+                memoryStorage.userPreference;
+
+        }
+
+
+        if (
+            value !== undefined &&
+            value !== null
+        ) {
+
+
+            document.getElementById(
+                "storageInput"
+            ).value = value;
+
+
+            showStorageMessage(
+                "✓ Saved preference loaded: " +
+                value
+            );
+
+
+        } else {
+
+
+            showStorageMessage(
+                "No saved preference found."
+            );
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       CLEAR PREFERENCE
+    ========================================================= */
+
+
+    function clearPreference() {
+
+
+        if (checkLocalStorage()) {
+
+
+            localStorage.removeItem(
+                "userPreference"
+            );
+
+        }
+
+
+        /*
+            Always clear fallback storage too.
+        */
+
+
+        delete memoryStorage.userPreference;
+
+
+        document.getElementById(
+            "storageInput"
+        ).value = "";
+
+
+        showStorageMessage(
+            "Preference cleared successfully."
+        );
+
+    }
+
+
+
+    /* =========================================================
+       DISPLAY STORAGE MESSAGE
+    ========================================================= */
+
+
+    function showStorageMessage(
+        message
+    ) {
+
+
+        document.getElementById(
+            "storageResult"
+        ).textContent =
+            message;
+
+    }
+
+
+
+    /* =========================================================
+       INITIALIZE COMPATIBILITY REPORT
+    ========================================================= */
+
+
+    function runCompatibilityCheck() {
+
+
+        var supported = 0;
+
+        var fallback = 0;
+
+        var tested = 3;
+
+
+        /* -----------------------------------------------
+           Check localStorage
+        ------------------------------------------------ */
+
+
+        var storageSupported =
+            checkLocalStorage();
+
+
+        updateBadge(
+
+            document.getElementById(
+                "storageBadge"
+            ),
+
+            storageSupported,
+
+            true
+
+        );
+
+
+        if (storageSupported) {
+
+            supported++;
+
+        } else {
+
+            fallback++;
+
+        }
+
+
+
+        /* -----------------------------------------------
+           Check querySelector
+        ------------------------------------------------ */
+
+
+        var selectorSupported =
+            checkQuerySelector();
+
+
+        updateBadge(
+
+            document.getElementById(
+                "selectorBadge"
+            ),
+
+            selectorSupported,
+
+            true
+
+        );
+
+
+        if (selectorSupported) {
+
+            supported++;
+
+        } else {
+
+            fallback++;
+
+        }
+
+
+
+        /* -----------------------------------------------
+           Check CSS Grid
+        ------------------------------------------------ */
+
+
+        var cssSupported =
+            checkCSSGrid();
+
+
+        updateBadge(
+
+            document.getElementById(
+                "cssBadge"
+            ),
+
+            cssSupported,
+
+            true
+
+        );
+
+
+        if (cssSupported) {
+
+            supported++;
+
+        } else {
+
+            fallback++;
+
+        }
+
+
+
+        /* -----------------------------------------------
+           Update report
+        ------------------------------------------------ */
+
+
+        document.getElementById(
+            "supportedCount"
+        ).textContent =
+            supported;
+
+
+        document.getElementById(
+            "fallbackCount"
+        ).textContent =
+            fallback;
+
+
+        document.getElementById(
+            "testedCount"
+        ).textContent =
+            tested;
+
+
+        var percentage =
+            Math.round(
+                (supported / tested) * 100
+            );
+
+
+        document.getElementById(
+            "score"
+        ).textContent =
+            percentage + "%";
+
+
+
+        /* -----------------------------------------------
+           Browser message
+        ------------------------------------------------ */
+
+
+        if (percentage === 100) {
+
+
+            document.getElementById(
+                "browserMessage"
+            ).textContent =
+                "Your browser supports all tested features.";
+
+
+        } else {
+
+
+            document.getElementById(
+                "browserMessage"
+            ).textContent =
+                "Some features are unavailable, but fallback techniques are active.";
+
+        }
+
+
+
+        /* -----------------------------------------------
+           Fallback explanation
+        ------------------------------------------------ */
+
+
+        if (storageSupported) {
+
+
+            document.getElementById(
+                "fallbackMessage"
+            ).textContent =
+                "localStorage is available. The webpage will use it as the primary storage mechanism.";
+
+
+        } else {
+
+
+            document.getElementById(
+                "fallbackMessage"
+            ).textContent =
+                "localStorage is unavailable. The webpage automatically uses an in-memory JavaScript fallback.";
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       BUTTON EVENT HANDLERS
+    ========================================================= */
+
+
+    document.getElementById(
+        "saveButton"
+    ).addEventListener(
+        "click",
+        savePreference
+    );
+
+
+    document.getElementById(
+        "loadButton"
+    ).addEventListener(
+        "click",
+        loadPreference
+    );
+
+
+    document.getElementById(
+        "clearButton"
+    ).addEventListener(
+        "click",
+        clearPreference
+    );
+
+
+
+    /* =========================================================
+       RUN INITIAL CHECK
+    ========================================================= */
+
+
+    runCompatibilityCheck();
+
+
+</script>
+
+
+</body>
+
+</html>
+```

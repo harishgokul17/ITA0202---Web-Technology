@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Conf — Registration</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root{
+    --navy: #14152c;
+    --navy-deep: #0b0c1e;
+    --paper: #fbf7ec;
+    --paper-shade: #f0e9d8;
+    --gold: #e8b64c;
+    --gold-deep: #c9932a;
+    --coral: #ff6b5c;
+    --ink: #1c1a2e;
+    --ink-soft: #6c6885;
+    --console-bg: #0e0f22;
+    --console-green: #7be8b8;
+    --console-amber: #f2c86b;
+    --console-dim: #52547a;
+    --border: rgba(28,26,46,0.12);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html,body{
+    margin:0;
+    min-height:100vh;
+    background: var(--navy);
+    background-image: radial-gradient(circle at 15% 0%, #1e2046 0%, transparent 55%),
+                       radial-gradient(circle at 100% 100%, #201b3f 0%, transparent 45%);
+    font-family: 'Inter', sans-serif;
+    color: var(--paper);
+  }
+
+  header{
+    text-align:center;
+    padding: 46px 20px 20px;
+  }
+
+  .kicker{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  h1{
+    font-family:'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px, 4.6vw, 44px);
+    margin: 10px 0 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .subhead{
+    color: #a9a6c9;
+    font-size: 14.5px;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .layout{
+    max-width: 1120px;
+    margin: 20px auto 0;
+    padding: 10px 20px 40px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 26px;
+    align-items: start;
+  }
+
+  @media (max-width: 880px){
+    .layout{ grid-template-columns: 1fr; }
+  }
+
+  /* ---------- TICKET (registration form) ---------- */
+
+  .ticket{
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 20px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ticket-top{
+    padding: 26px 28px 20px;
+  }
+
+  .ticket-top .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color: var(--ink-soft);
+  }
+
+  .ticket-name-preview{
+    font-family:'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    margin-top: 4px;
+    min-height: 34px;
+    color: var(--ink);
+  }
+  .ticket-name-preview.placeholder{ color: #c7c2ac; }
+
+  .ticket-meta{
+    display:flex;
+    gap: 22px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .ticket-meta .m .k{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color: var(--ink-soft);
+  }
+  .ticket-meta .m .v{
+    font-family:'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    margin-top: 2px;
+  }
+
+  /* perforated tear line — the page's signature device */
+  .tear{
+    position: relative;
+    height: 0;
+    border-top: 2px dashed #d8d0b8;
+    margin: 4px 0;
+  }
+  .tear::before, .tear::after{
+    content:"";
+    position:absolute;
+    top:-13px;
+    width: 26px; height: 26px;
+    background: var(--navy);
+    border-radius: 50%;
+  }
+  .tear::before{ left: -13px; }
+  .tear::after{ right: -13px; }
+
+  .ticket-form{
+    padding: 22px 28px 28px;
+  }
+
+  .field{
+    margin-bottom: 18px;
+  }
+  .field label{
+    display:block;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .field input[type="text"],
+  .field input[type="email"],
+  .field select{
+    width:100%;
+    padding: 11px 13px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-family:'Inter', sans-serif;
+    font-size: 14.5px;
+    color: var(--ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .field input:focus, .field select:focus{
+    outline:none;
+    border-color: var(--gold-deep);
+    box-shadow: 0 0 0 3px rgba(232,182,76,0.25);
+  }
+  .field.focused label{ color: var(--gold-deep); }
+
+  .hint{
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 5px;
+    min-height: 15px;
+  }
+
+  .charcount{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-align:right;
+    margin-top: 4px;
+  }
+
+  .checkline{
+    display:flex;
+    align-items:center;
+    gap: 9px;
+    font-size: 13.5px;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+
+  .perks{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .perk-card{
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: default;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+  .perk-card.hovered{
+    background: #fff6e0;
+    border-color: var(--gold-deep);
+    transform: translateY(-2px);
+  }
+
+  .btn-row{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  button{
+    font-family:'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13.5px;
+    border-radius: 10px;
+    padding: 10px 16px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.12s ease, opacity 0.12s ease;
+  }
+  button:active{ transform: scale(0.97); }
+
+  .btn-outline{
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+  }
+  .btn-outline:hover{ background: var(--ink); color: var(--paper); }
+
+  .btn-solid{
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-solid:hover{ opacity: 0.85; }
+
+  .submit-btn{
+    width:100%;
+    background: var(--coral);
+    color: #fff;
+    padding: 13px;
+    font-size: 14.5px;
+    font-weight:700;
+  }
+  .submit-btn:hover{ opacity: 0.9; }
+
+  .confirm-stamp{
+    display:none;
+    margin-top: 14px;
+    border: 2px solid #2f9e6b;
+    color: #1f7a52;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    font-weight:700;
+    text-align:center;
+    letter-spacing: 0.06em;
+    transform: rotate(-2deg);
+  }
+  .confirm-stamp.show{ display:block; }
+
+  .tag{
+    display:inline-block;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing:0.06em;
+    padding: 2px 7px;
+    border-radius: 5px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .tag.intrinsic{ background:#ffe4de; color:#b5382a; }
+  .tag.modern{ background:#e1ecff; color:#28499e; }
+
+  /* ---------- CONSOLE (live event log) ---------- */
+
+  .console{
+    background: var(--console-bg);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    height: 100%;
+  }
+  .console-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .console-head .dots{ display:flex; gap:6px; }
+  .console-head .dots span{
+    width:9px; height:9px; border-radius:50%;
+  }
+  .console-head .dots span:nth-child(1){ background:#ff6159; }
+  .console-head .dots span:nth-child(2){ background:#ffbd2e; }
+  .console-head .dots span:nth-child(3){ background:#28c940; }
+  .console-head .title{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: #a9a6c9;
+  }
+  .console-head button{
+    background: rgba(255,255,255,0.06);
+    color: #cfcdea;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    padding: 5px 10px;
+  }
+  .console-head button:hover{ background: rgba(255,255,255,0.12); }
+
+  .console-body{
+    flex:1;
+    padding: 14px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.7;
+    overflow-y: auto;
+    max-height: 420px;
+    min-height: 220px;
+  }
+  .console-body .empty{ color: var(--console-dim); }
+  .log-line{ display:flex; gap:8px; }
+  .log-line .t{ color: var(--console-dim); flex:none; }
+  .log-line .evt{ color: var(--console-amber); flex:none; }
+  .log-line .msg{ color: var(--console-green); }
+
+  .compare{
+    max-width: 1120px;
+    margin: 10px auto 60px;
+    padding: 0 20px;
+  }
+  .compare h2{
+    font-family:'Archivo', sans-serif;
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+  .compare-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 720px){ .compare-grid{ grid-template-columns: 1fr; } }
+
+  .compare-card{
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 18px 20px;
+  }
+  .compare-card h3{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing:0.04em;
+    margin: 0 0 10px;
+  }
+  .compare-card.intrinsic h3{ color: var(--coral); }
+  .compare-card.modern h3{ color: #8ab4ff; }
+  .compare-card ul{
+    margin:0; padding-left: 18px;
+    font-size: 13px;
+    color: #c7c4e2;
+    line-height: 1.7;
+  }
+  .compare-card code{
+    background: rgba(255,255,255,0.08);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  footer{
+    text-align:center;
+    padding: 0 20px 50px;
+    font-size: 12px;
+    color: #706d95;
+    font-family:'JetBrains Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Event Handling Lab</div>
+  <h1>Signal Conf — Registration</h1>
+  <p class="subhead">Fill out the ticket on the left. Every interaction — typing, focusing, hovering, changing, clicking, submitting — is logged live on the right, tagged by the JavaScript event that fired it.</p>
+</header>
+
+<div class="layout">
+
+  <!-- ============ TICKET / FORM ============ -->
+  <div class="ticket">
+    <div class="ticket-top">
+      <div class="eyebrow">Attendee</div>
+      <div class="ticket-name-preview placeholder" id="namePreview">Your name goes here</div>
+      <div class="ticket-meta">
+        <div class="m"><div class="k">Ticket</div><div class="v" id="ticketTypePreview">— Select —</div></div>
+        <div class="m"><div class="k">Seat</div><div class="v">GA-014</div></div>
+        <div class="m"><div class="k">Date</div><div class="v">Oct 3, 2026</div></div>
+      </div>
+    </div>
+
+    <div class="tear"></div>
+
+    <form class="ticket-form" id="regForm">
+
+      <div class="field" id="nameField">
+        <label for="nameInput">Full name</label>
+        <input type="text" id="nameInput" placeholder="e.g. Priya Raman" autocomplete="off">
+        <div class="charcount"><span id="charCount">0</span> / 40 characters — <code>input</code> event</div>
+      </div>
+
+      <div class="field" id="emailField">
+        <label for="emailInput">Email address</label>
+        <input type="email" id="emailInput" placeholder="you@college.edu" autocomplete="off">
+        <div class="hint" id="emailHint">We'll send your ticket confirmation here.</div>
+      </div>
+
+      <div class="field">
+        <label for="ticketSelect">Ticket type</label>
+        <select id="ticketSelect">
+          <option value="">— Select —</option>
+          <option value="Student — Free">Student — Free</option>
+          <option value="General — $49">General — $49</option>
+          <option value="VIP — $129">VIP — $129</option>
+        </select>
+      </div>
+
+      <div class="checkline">
+        <input type="checkbox" id="newsletterCheck">
+        <label for="newsletterCheck">Send me the speaker lineup by email</label>
+      </div>
+
+      <div class="perks" id="perksList" style="display:none;">
+        <div class="perk-card" data-perk="Workshop access">🎟️ Workshop access</div>
+        <div class="perk-card" data-perk="Swag bag">🎒 Swag bag</div>
+        <div class="perk-card" data-perk="Recorded talks">📹 Recorded talks</div>
+        <div class="perk-card" data-perk="Networking mixer">🥂 Networking mixer</div>
+      </div>
+
+      <div class="btn-row">
+        <!-- INTRINSIC handler: wired directly via the onclick="" HTML attribute -->
+        <button type="button" class="btn-outline" onclick="togglePerks()">
+          Show perks <span class="tag intrinsic">onclick=""</span>
+        </button>
+
+        <!-- MODERN handler: wired later in JS via addEventListener -->
+        <button type="button" class="btn-solid" id="notifyBtn">
+          Notify my team <span class="tag modern">addEventListener</span>
+        </button>
+      </div>
+
+      <button type="submit" class="submit-btn">Complete registration</button>
+      <div class="confirm-stamp" id="confirmStamp">✓ REGISTERED — confirmation sent</div>
+    </form>
+  </div>
+
+  <!-- ============ LIVE EVENT CONSOLE ============ -->
+  <div class="console">
+    <div class="console-head">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="title">event-log.js</div>
+      <button id="clearLog">clear</button>
+    </div>
+    <div class="console-body" id="consoleBody">
+      <div class="empty">// interact with the form — events will appear here</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ COMPARISON ============ -->
+<div class="compare">
+  <h2>Intrinsic handlers vs. addEventListener()</h2>
+  <div class="compare-grid">
+    <div class="compare-card intrinsic">
+      <h3>onclick="..." (intrinsic, in HTML)</h3>
+      <ul>
+        <li>Handler is written as an attribute on the tag itself, e.g. <code>&lt;button onclick="run()"&gt;</code>.</li>
+        <li>Mixes JavaScript into markup — harder to keep structure and behavior separate.</li>
+        <li>An element can hold only <strong>one</strong> intrinsic handler per event; assigning a new one overwrites the old.</li>
+        <li>No access to options like <code>capture</code>, <code>once</code>, or <code>passive</code>.</li>
+        <li>Quick to demo, but blocked by strict Content-Security-Policy rules in production apps.</li>
+      </ul>
+    </div>
+    <div class="compare-card modern">
+      <h3>element.addEventListener() (modern)</h3>
+      <ul>
+        <li>Handler is attached in JavaScript: <code>btn.addEventListener('click', run)</code> — markup stays clean.</li>
+        <li>An element can have <strong>multiple</strong> listeners for the same event, all firing independently.</li>
+        <li>Supports <code>removeEventListener()</code>, plus options like <code>{ once: true }</code> or <code>{ capture: true }</code>.</li>
+        <li>Works with any event type, including custom events dispatched by your own code.</li>
+        <li>The standard approach in real-world, maintainable front-end code.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer>onclick · change · input · focus · blur · mouseover · mouseout · submit · addEventListener()</footer>
+
+<script>
+  const logBody = document.getElementById('consoleBody');
+  let logStarted = false;
+
+  function log(eventName, message){
+    if(!logStarted){
+      logBody.innerHTML = '';
+      logStarted = true;
+    }
+    const time = new Date().toLocaleTimeString('en-US', { hour12:false });
+    const line = document.createElement('div');
+    line.className = 'log-line';
+    line.innerHTML = `<span class="t">${time}</span><span class="evt">${eventName}</span><span class="msg">${message}</span>`;
+    logBody.appendChild(line);
+    logBody.scrollTop = logBody.scrollHeight;
+  }
+
+  document.getElementById('clearLog').addEventListener('click', () => {
+    logBody.innerHTML = '<div class="empty">// log cleared</div>';
+    logStarted = false;
+  });
+
+  /* ---------- INTRINSIC handler ----------
+     Wired directly in the HTML as onclick="togglePerks()".
+     Defined as a plain global function so the HTML attribute can find it. */
+  function togglePerks(){
+    const perks = document.getElementById('perksList');
+    const showing = perks.style.display === 'grid';
+    perks.style.display = showing ? 'none' : 'grid';
+    log('click (intrinsic)', showing ? 'Perks hidden' : 'Perks revealed via onclick=""');
+  }
+
+  /* ---------- MODERN handler: addEventListener ---------- */
+  document.getElementById('notifyBtn').addEventListener('click', function(){
+    log('click (addEventListener)', 'Team notification queued');
+    this.textContent = 'Notified ✓';
+    setTimeout(() => { this.innerHTML = 'Notify my team <span class="tag modern">addEventListener</span>'; }, 1500);
+  });
+
+  /* ---------- input: live character count + ticket name preview ---------- */
+  const nameInput = document.getElementById('nameInput');
+  const namePreview = document.getElementById('namePreview');
+  const charCount = document.getElementById('charCount');
+
+  nameInput.addEventListener('input', (e) => {
+    const val = e.target.value;
+    charCount.textContent = val.length;
+    if(val.trim().length){
+      namePreview.textContent = val;
+      namePreview.classList.remove('placeholder');
+    } else {
+      namePreview.textContent = 'Your name goes here';
+      namePreview.classList.add('placeholder');
+    }
+    log('input', `Name field now "${val}"`);
+  });
+
+  /* ---------- focus / blur on the email field ---------- */
+  const emailField = document.getElementById('emailField');
+  const emailInput = document.getElementById('emailInput');
+  const emailHint = document.getElementById('emailHint');
+
+  emailInput.addEventListener('focus', () => {
+    emailField.classList.add('focused');
+    emailHint.textContent = 'Looks good — we only use this for your ticket.';
+    log('focus', 'Email field focused');
+  });
+
+  emailInput.addEventListener('blur', () => {
+    emailField.classList.remove('focused');
+    const valid = /\S+@\S+\.\S+/.test(emailInput.value);
+    emailHint.textContent = emailInput.value && !valid
+      ? 'That doesn\'t look like a valid email yet.'
+      : 'We\'ll send your ticket confirmation here.';
+    log('blur', 'Email field lost focus');
+  });
+
+  /* ---------- change on the ticket-type select ---------- */
+  const ticketSelect = document.getElementById('ticketSelect');
+  const ticketTypePreview = document.getElementById('ticketTypePreview');
+
+  ticketSelect.addEventListener('change', (e) => {
+    ticketTypePreview.textContent = e.target.value || '— Select —';
+    log('change', `Ticket type set to "${e.target.value}"`);
+  });
+
+  document.getElementById('newsletterCheck').addEventListener('change', (e) => {
+    log('change', `Newsletter opt-in: ${e.target.checked}`);
+  });
+
+  /* ---------- mouseover / mouseout on perk cards ---------- */
+  document.querySelectorAll('.perk-card').forEach(card => {
+    card.addEventListener('mouseover', () => {
+      card.classList.add('hovered');
+      log('mouseover', `Hovered "${card.dataset.perk}"`);
+    });
+    card.addEventListener('mouseout', () => {
+      card.classList.remove('hovered');
+      log('mouseout', `Left "${card.dataset.perk}"`);
+    });
+  });
+
+  /* ---------- submit ---------- */
+  document.getElementById('regForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const stamp = document.getElementById('confirmStamp');
+    stamp.classList.add('show');
+    log('submit', 'Form submitted — default page reload prevented');
+  });
+</script>
+
+</body>
+</html>

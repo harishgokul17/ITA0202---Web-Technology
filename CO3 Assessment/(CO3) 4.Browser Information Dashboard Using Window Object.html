@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browser Info Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --violet: #7c5cff;
+    --violet-deep: #5a3ff0;
+    --pink: #ff5ca8;
+    --teal: #14c8a4;
+    --amber: #ffb648;
+    --bg: #f5f4ff;
+    --card: #ffffff;
+    --ink: #241f3d;
+    --ink-soft: #746f94;
+    --border: #ece9fb;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family: 'Inter', sans-serif;
+    background:
+      radial-gradient(circle at 12% 8%, #efe9ff 0%, transparent 45%),
+      radial-gradient(circle at 90% 0%, #ffe9f4 0%, transparent 40%),
+      var(--bg);
+    color: var(--ink);
+  }
+
+  header{
+    text-align:center;
+    padding: 52px 20px 28px;
+  }
+
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight:600;
+    color: var(--violet-deep);
+    box-shadow: 0 2px 8px rgba(124,92,255,0.08);
+  }
+
+  .badge .pulse{
+    width:8px; height:8px; border-radius:50%;
+    background: var(--teal);
+    box-shadow: 0 0 0 0 rgba(20,200,164,0.5);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse{
+    0%{ box-shadow: 0 0 0 0 rgba(20,200,164,0.45); }
+    70%{ box-shadow: 0 0 0 8px rgba(20,200,164,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(20,200,164,0); }
+  }
+
+  h1{
+    font-family:'Poppins', sans-serif;
+    font-weight:800;
+    font-size: clamp(28px, 5vw, 42px);
+    margin: 16px 0 8px;
+    background: linear-gradient(100deg, var(--violet-deep), var(--pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .subhead{
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  main{
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 8px 20px 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 22px 22px 20px;
+    box-shadow: 0 6px 20px rgba(90, 63, 240, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+  }
+
+  .card:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(90, 63, 240, 0.12);
+  }
+
+  .card.wide{ grid-column: 1 / -1; }
+
+  .icon-chip{
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+
+  .chip-violet{ background: #efe9ff; }
+  .chip-pink{ background: #ffe9f4; }
+  .chip-teal{ background: #e4faf5; }
+  .chip-amber{ background: #fff4e2; }
+
+  .card .label{
+    font-size: 12.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+
+  .card .value{
+    font-family:'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--ink);
+    word-break: break-word;
+    line-height: 1.35;
+  }
+
+  .card .value.small{ font-size: 14.5px; font-weight:600; }
+
+  .status-pill{
+    display:inline-flex;
+    align-items:center;
+    gap: 7px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .status-online{ background:#e4faf5; color:#0e9c7f; }
+  .status-offline{ background:#ffe4e4; color:#e0453f; }
+
+  .split{
+    display:flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .split .piece .k{
+    font-size:11px;
+    font-weight:600;
+    color: var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    margin-bottom: 2px;
+  }
+  .split .piece .v{
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    font-size: 20px;
+  }
+  .split .piece .v .unit{
+    font-family:'Inter', sans-serif;
+    font-size: 12px;
+    font-weight:500;
+    color: var(--ink-soft);
+    margin-left:2px;
+  }
+
+  .bar-track{
+    margin-top: 12px;
+    height: 8px;
+    border-radius: 999px;
+    background: #f1effc;
+    overflow:hidden;
+  }
+  .bar-fill{
+    height:100%;
+    border-radius:999px;
+    width:0%;
+    transition: width 0.15s ease-out;
+    background: linear-gradient(90deg, var(--violet), var(--pink));
+  }
+  .bar-fill.teal{ background: linear-gradient(90deg, var(--teal), #6be2c8); }
+
+  footer{
+    text-align:center;
+    padding: 10px 20px 60px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  footer code{
+    background: var(--card);
+    border:1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 11.5px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .bar-fill, .card{ transition:none; }
+    .badge .pulse{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="badge"><span class="pulse"></span>Live &amp; Updating</span>
+  <h1>Browser Info Dashboard</h1>
+  <p class="subhead">A mini experiment on the <code>window</code>, <code>navigator</code>, and <code>screen</code> objects — resize the window or scroll the page and watch the numbers change instantly.</p>
+</header>
+
+<main>
+
+  <div class="card wide">
+    <div class="icon-chip chip-violet">🔗</div>
+    <div class="label">Current URL</div>
+    <div class="value small" id="url-value">—</div>
+  </div>
+
+  <div class="card">
+    <div class="icon-chip chip-pink">🌐</div>
+    <div class="label">Browser Language</div>
+    <div class="value" id="lang-value">—</div>
+  </div>
+
+  <div class="card" id="status-card">
+    <div class="icon-chip chip-teal">📶</div>
+    <div class="label">Connection Status</div>
+    <div id="status-value" class="status-pill status-online">● Online</div>
+  </div>
+
+  <div class="card">
+    <div class="icon-chip chip-amber">🖥️</div>
+    <div class="label">Screen Size</div>
+    <div class="split">
+      <div class="piece"><div class="k">Width</div><div class="v"><span id="screen-w">—</span><span class="unit">px</span></div></div>
+      <div class="piece"><div class="k">Height</div><div class="v"><span id="screen-h">—</span><span class="unit">px</span></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="icon-chip chip-violet">🪟</div>
+    <div class="label">Viewport Size</div>
+    <div class="split">
+      <div class="piece"><div class="k">Width</div><div class="v"><span id="vp-w">—</span><span class="unit">px</span></div></div>
+      <div class="piece"><div class="k">Height</div><div class="v"><span id="vp-h">—</span><span class="unit">px</span></div></div>
+    </div>
+    <div class="bar-track"><div class="bar-fill" id="vp-bar"></div></div>
+  </div>
+
+  <div class="card wide">
+    <div class="icon-chip chip-pink">📜</div>
+    <div class="label">Scroll Position</div>
+    <div class="split">
+      <div class="piece"><div class="k">Scroll X</div><div class="v"><span id="scroll-x">—</span><span class="unit">px</span></div></div>
+      <div class="piece"><div class="k">Scroll Y</div><div class="v"><span id="scroll-y">—</span><span class="unit">px</span></div></div>
+    </div>
+    <div class="bar-track"><div class="bar-fill teal" id="scroll-bar"></div></div>
+  </div>
+
+</main>
+
+<footer>
+  Built with <code>window.location</code> · <code>window.innerWidth/Height</code> · <code>window.scrollX/Y</code> · <code>navigator.onLine</code> · <code>navigator.language</code> · <code>screen.width/height</code>
+</footer>
+
+<!-- extra scroll height so there's room to scroll and test scrollY -->
+<div style="height:1400px;"></div>
+
+<script>
+  function updateStatic() {
+    document.getElementById('url-value').textContent = window.location.href;
+    document.getElementById('lang-value').textContent = navigator.language || navigator.userLanguage || 'unknown';
+    document.getElementById('screen-w').textContent = screen.width;
+    document.getElementById('screen-h').textContent = screen.height;
+  }
+
+  function updateStatus() {
+    const online = navigator.onLine;
+    const statusEl = document.getElementById('status-value');
+    statusEl.textContent = online ? '● Online' : '● Offline';
+    statusEl.className = 'status-pill ' + (online ? 'status-online' : 'status-offline');
+  }
+
+  function updateViewport() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    document.getElementById('vp-w').textContent = w;
+    document.getElementById('vp-h').textContent = h;
+    const pct = Math.min(100, (w / screen.width) * 100);
+    document.getElementById('vp-bar').style.width = pct + '%';
+  }
+
+  function updateScroll() {
+    const x = Math.round(window.scrollX);
+    const y = Math.round(window.scrollY);
+    document.getElementById('scroll-x').textContent = x;
+    document.getElementById('scroll-y').textContent = y;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = maxScroll > 0 ? Math.min(100, (y / maxScroll) * 100) : 0;
+    document.getElementById('scroll-bar').style.width = pct + '%';
+  }
+
+  // Initial paint
+  updateStatic();
+  updateStatus();
+  updateViewport();
+  updateScroll();
+
+  // Live listeners
+  window.addEventListener('resize', updateViewport);
+  window.addEventListener('scroll', updateScroll);
+  window.addEventListener('online', updateStatus);
+  window.addEventListener('offline', updateStatus);
+</script>
+
+</body>
+</html>
