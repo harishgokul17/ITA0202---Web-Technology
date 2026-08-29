@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dynamic Portal | Web Technology</title>
+<style>
+/* CO3 - Experiment 6 | Student Dynamic Portal (all-in-one) */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --ink: #172033;
+    --muted: #667085;
+    --surface: #ffffff;
+    --page: #f4f7fb;
+    --line: #dce3ee;
+    --accent: #155eef;
+    --accent-dark: #1047b8;
+    --soft: #eef4ff;
+    --radius: 18px;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--page);
+    color: var(--ink);
+    min-height: 100vh;
+}
+
+.page {
+    width: min(1120px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 42px 0;
+}
+
+.hero {
+    background: linear-gradient(120deg, #13213b, #234a88);
+    color: white;
+    border-radius: 24px;
+    padding: 42px;
+    margin-bottom: 24px;
+    box-shadow: 0 18px 40px rgba(19, 33, 59, 0.16);
+}
+
+.tag, .status {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    padding: 7px 11px;
+    border-radius: 20px;
+}
+
+.tag {
+    background: rgba(255,255,255,.14);
+    margin-bottom: 15px;
+}
+
+.hero h1 {
+    font-size: clamp(30px, 5vw, 48px);
+    margin-bottom: 9px;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #dce8ff;
+    margin-bottom: 20px;
+}
+
+.college {
+    font-size: 14px;
+    color: #bcd0f3;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: 0 10px 28px rgba(31, 41, 55, 0.06);
+}
+
+.panel h2 {
+    font-size: 22px;
+    margin-bottom: 9px;
+}
+
+.description {
+    color: var(--muted);
+    line-height: 1.55;
+    margin-bottom: 22px;
+    font-size: 14px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 17px 0 8px;
+}
+
+input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(21, 94, 239, .12);
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+button {
+    border: 0;
+    border-radius: 10px;
+    padding: 12px 17px;
+    font-weight: 700;
+    cursor: pointer;
+    background: var(--accent);
+    color: white;
+    font-size: 14px;
+}
+
+button:hover {
+    background: var(--accent-dark);
+}
+
+button.outline, .close {
+    background: white;
+    color: var(--accent);
+    border: 1px solid #b8c9e8;
+}
+
+button.outline:hover, .close:hover {
+    background: var(--soft);
+}
+
+.tip {
+    margin-top: 22px;
+    padding: 15px;
+    background: var(--soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #344054;
+}
+
+.tip p {
+    margin-top: 5px;
+    line-height: 1.5;
+}
+
+code {
+    font-family: Consolas, monospace;
+}
+
+.flow {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 25px 0;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.flow > div:not(.arrow) {
+    min-width: 100px;
+    text-align: center;
+    padding: 13px 8px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #f8fafc;
+}
+
+.flow b {
+    display: block;
+    color: var(--accent);
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.flow span {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.flow small {
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.arrow {
+    color: #98a2b3;
+    font-size: 22px;
+}
+
+.details {
+    border-top: 1px solid var(--line);
+}
+
+.details div, .response-grid div {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+}
+
+.details span, .response-grid span {
+    color: var(--muted);
+}
+
+.details strong {
+    font-size: 13px;
+}
+
+.preview {
+    margin-top: 24px;
+}
+
+.hidden {
+    display: none;
+}
+
+.preview-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.status {
+    background: #e8f1ff;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+
+.response {
+    background: #13213b;
+    color: white;
+    border-radius: 14px;
+    padding: 25px;
+}
+
+.response h3 {
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.response p {
+    color: #bcd0f3;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.response-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 25px;
+}
+
+.response-grid div {
+    border-color: rgba(255,255,255,.12);
+}
+
+.response-grid strong {
+    color: #dce8ff;
+    text-align: right;
+}
+
+footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 25px 0 0;
+}
+
+@media (max-width: 820px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        padding: 30px 24px;
+    }
+}
+
+@media (max-width: 560px) {
+    .page {
+        width: min(100% - 20px, 1120px);
+        padding-top: 20px;
+    }
+
+    .panel {
+        padding: 20px;
+    }
+
+    .actions, .response-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .response-grid {
+        display: block;
+    }
+}
+
+/* ---- Servlet response view (mimics WelcomeServlet's generated page) ---- */
+
+#servletView {
+    width: min(680px, 100%);
+    margin: 42px auto;
+}
+
+#servletView .box {
+    width: 100%;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 34px;
+    box-shadow: 0 18px 45px rgba(19,33,59,.12);
+}
+
+.label {
+    display: inline-block;
+    background: #e8f1ff;
+    color: var(--accent);
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#servletView h1 {
+    font-size: 30px;
+    margin: 18px 0 8px;
+    color: #13213b;
+}
+
+#servletView .intro {
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.info {
+    margin-top: 22px;
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    overflow: hidden;
+}
+
+.info .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 15px;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+}
+
+.info .row:last-child {
+    border-bottom: 0;
+}
+
+.info .key {
+    color: var(--muted);
+    font-weight: bold;
+}
+
+.info .value {
+    color: var(--accent);
+    font-weight: bold;
+    text-align: right;
+}
+
+.back {
+    display: inline-block;
+    margin-top: 22px;
+    background: var(--accent);
+    color: white;
+    text-decoration: none;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.back:hover {
+    background: var(--accent-dark);
+}
+</style>
+</head>
+<body>
+<div class="page" id="formView">
+    <header class="hero">
+        <div class="tag">CO3 — EXPERIMENT 6</div>
+        <h1>Student Dynamic Portal</h1>
+        <p>Basic Java Servlet for Dynamic Content Generation</p>
+        <span class="college">SIMATS Engineering • IT Department • II Year</span>
+    </header>
+
+    <section class="content-grid">
+        <div class="panel form-panel">
+            <h2>Student Details</h2>
+            <p class="description">Enter the details below and send them to the Java Servlet using an HTTP GET request.</p>
+
+            <form id="studentForm">
+                <label for="studentName">Student Name & Register Number</label>
+                <input type="text" id="studentName" name="studentName"
+                       value="Harish T (192521373)" required>
+
+                <label for="courseName">Course & Code</label>
+                <input type="text" id="courseName" name="courseName"
+                       value="Web Technology (ITA0202)" required>
+
+                <div class="actions">
+                    <button type="submit">Send to Servlet</button>
+                    <button type="button" id="previewBtn" class="outline">Preview</button>
+                </div>
+            </form>
+
+            <div class="tip">
+                <strong>How it works</strong>
+                <p>Clicking "Send to Servlet" simulates <code>WelcomeServlet.doGet()</code>: it reads each parameter, applies the same defaults, and generates the response markup right here on the same page instead of a server round trip.</p>
+            </div>
+        </div>
+
+        <div class="panel concept-panel">
+            <h2>Servlet Request Flow</h2>
+            <div class="flow">
+                <div><b>01</b><span>Browser<br><small>GET Request</small></span></div>
+                <div class="arrow">→</div>
+                <div><b>02</b><span>Tomcat<br><small>URL Mapping</small></span></div>
+                <div class="arrow">→</div>
+                <div><b>03</b><span>Servlet<br><small>doGet()</small></span></div>
+                <div class="arrow">→</div>
+                <div><b>04</b><span>Response<br><small>Dynamic HTML</small></span></div>
+            </div>
+
+            <div class="details">
+                <div><span>Servlet Class</span><strong>WelcomeServlet</strong></div>
+                <div><span>HTTP Method</span><strong>GET</strong></div>
+                <div><span>Server</span><strong>Apache Tomcat</strong></div>
+                <div><span>Response</span><strong>HTML + Timestamp</strong></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="preview" class="preview panel hidden">
+        <div class="preview-head">
+            <div>
+                <span class="status">LOCAL PREVIEW</span>
+                <h2>Dynamic Response Preview</h2>
+            </div>
+            <button id="closeBtn" class="close">Close</button>
+        </div>
+        <div class="response">
+            <h3 id="previewTitle">Welcome, Harish T!</h3>
+            <p>This preview represents the information that the servlet can generate dynamically.</p>
+            <div class="response-grid">
+                <div><span>Student</span><strong id="previewStudent">-</strong></div>
+                <div><span>Course</span><strong id="previewCourse">-</strong></div>
+                <div><span>Current Browser Time</span><strong id="previewTime">-</strong></div>
+                <div><span>Request Type</span><strong>GET / doGet()</strong></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>Web Technology • ITA0202 • SIMATS Engineering</footer>
+</div>
+
+<!-- ===================== SERVLET RESPONSE VIEW (mimics WelcomeServlet's generated page) ===================== -->
+<div class="page hidden" id="servletView">
+    <div class="box" id="servletBox"></div>
+</div>
+
+<script>
+// CO3 - Experiment 6 | Student Dynamic Portal (all-in-one)
+// This script simulates WelcomeServlet.doGet() entirely client-side: it reads
+// the "request parameters", applies the same defaults, and renders the same
+// response markup the servlet would generate with PrintWriter.
+
+const formView = document.getElementById("formView");
+const servletView = document.getElementById("servletView");
+const servletBox = document.getElementById("servletBox");
+
+const form = document.getElementById("studentForm");
+const nameField = document.getElementById("studentName");
+const courseField = document.getElementById("courseName");
+const preview = document.getElementById("preview");
+const previewBtn = document.getElementById("previewBtn");
+const closeBtn = document.getElementById("closeBtn");
+
+const previewStudent = document.getElementById("previewStudent");
+const previewCourse = document.getElementById("previewCourse");
+const previewTime = document.getElementById("previewTime");
+const previewTitle = document.getElementById("previewTitle");
+
+let clock;
+
+function showPreview() {
+    const student = nameField.value.trim() || "Harish T (192521373)";
+    const course = courseField.value.trim() || "Web Technology (ITA0202)";
+
+    previewStudent.textContent = student;
+    previewCourse.textContent = course;
+
+    const nameOnly = student.split("(")[0].trim();
+    previewTitle.textContent = `Welcome, ${nameOnly}!`;
+
+    updateTime();
+    clearInterval(clock);
+    clock = setInterval(updateTime, 1000);
+
+    preview.classList.remove("hidden");
+    preview.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function updateTime() {
+    previewTime.textContent = new Date().toLocaleString("en-IN", {
+        dateStyle: "medium",
+        timeStyle: "medium"
+    });
+}
+
+previewBtn.addEventListener("click", showPreview);
+
+closeBtn.addEventListener("click", () => {
+    clearInterval(clock);
+    preview.classList.add("hidden");
+});
+
+// Escapes text the same way the servlet's escapeHtml() helper does.
+function escapeHtml(value) {
+    if (value === null || value === undefined) return "";
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+// Equivalent of WelcomeServlet.doGet()
+function processRequest(params) {
+    let studentName = params.studentName;
+    let courseName = params.courseName;
+
+    if (!studentName || !studentName.trim()) {
+        studentName = "Harish T (192521373)";
+    }
+    if (!courseName || !courseName.trim()) {
+        courseName = "Web Technology (ITA0202)";
+    }
+
+    const serverTime = new Date().toLocaleString("en-IN", {
+        weekday: "long", day: "2-digit", month: "long", year: "numeric",
+        hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true
+    });
+
+    let html = "";
+    html += `<span class="label">DYNAMIC SERVLET RESPONSE</span>`;
+    html += `<h1>Welcome, ${escapeHtml(studentName)}!</h1>`;
+    html += `<p class="intro">This page was generated dynamically, simulating a Java Servlet's <strong>doGet()</strong> method and <strong>PrintWriter</strong> output.</p>`;
+    html += `<div class="info">`;
+    html += `<div class="row"><span class="key">Student Name</span><span class="value">${escapeHtml(studentName)}</span></div>`;
+    html += `<div class="row"><span class="key">Course</span><span class="value">${escapeHtml(courseName)}</span></div>`;
+    html += `<div class="row"><span class="key">Server Date & Time</span><span class="value">${escapeHtml(serverTime)}</span></div>`;
+    html += `<div class="row"><span class="key">HTTP Method</span><span class="value">GET (doGet)</span></div>`;
+    html += `<div class="row"><span class="key">Server Protocol</span><span class="value">HTTP/1.1</span></div>`;
+    html += `</div>`;
+    html += `<a class="back" id="backToForm" href="#">← Back to Student Portal</a>`;
+
+    servletBox.innerHTML = html;
+
+    document.getElementById("backToForm").addEventListener("click", (e) => {
+        e.preventDefault();
+        servletView.classList.add("hidden");
+        formView.classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    formView.classList.add("hidden");
+    servletView.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    if (!nameField.value.trim() || !courseField.value.trim()) {
+        alert("Please enter all required student details.");
+        return;
+    }
+
+    processRequest({
+        studentName: nameField.value,
+        courseName: courseField.value
+    });
+});
+</script>
+</body>
+</html>

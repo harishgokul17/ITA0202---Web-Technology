@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Registration | Harish T</title>
+<style>
+/* CO3 - Experiment 7 | Student Registration Form (all-in-one) */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --navy: #14213d;
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --page: #f5f7fb;
+    --white: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --line: #e2e8f0;
+    --soft: #eff6ff;
+    --green: #15803d;
+    --green-soft: #ecfdf3;
+    --red: #be123c;
+    --red-soft: #fff1f2;
+    --red-line: #fecdd3;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--page);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+.wrapper {
+    width: min(1100px, calc(100% - 28px));
+    margin: auto;
+    padding: 32px 0;
+}
+
+.top {
+    background: var(--navy);
+    color: white;
+    border-radius: 22px;
+    padding: 34px 38px;
+    margin-bottom: 22px;
+}
+
+.course-chip {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.12);
+    color: #bfdbfe;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1.2px;
+}
+
+.top h1 {
+    font-size: clamp(29px, 5vw, 44px);
+    margin: 16px 0 7px;
+}
+
+.top p {
+    color: #cbd5e1;
+    font-size: 17px;
+}
+
+.student-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 22px;
+}
+
+.student-strip span {
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 8px;
+    padding: 7px 10px;
+    color: #dbeafe;
+    font-size: 12px;
+}
+
+.workspace {
+    display: grid;
+    grid-template-columns: 1.35fr .85fr;
+    gap: 22px;
+}
+
+.card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 27px;
+    box-shadow: 0 9px 25px rgba(15, 23, 42, .055);
+}
+
+.section-heading {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 11px;
+    background: var(--soft);
+    color: var(--blue);
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+}
+
+h2 {
+    font-size: 21px;
+    color: var(--navy);
+}
+
+.section-heading p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.field {
+    margin-bottom: 17px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: white;
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+}
+
+input:focus, select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+}
+
+.two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+button {
+    border: 0;
+    border-radius: 9px;
+    padding: 12px 17px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.primary {
+    background: var(--blue);
+    color: white;
+    flex: 1.2;
+}
+
+.primary:hover {
+    background: var(--blue-dark);
+}
+
+.secondary, .close {
+    background: white;
+    color: var(--blue);
+    border: 1px solid #bfdbfe;
+}
+
+.secondary:hover, .close:hover {
+    background: var(--soft);
+}
+
+.hint {
+    margin-top: 20px;
+    padding: 14px;
+    border-left: 4px solid var(--blue);
+    background: var(--soft);
+    color: #475569;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 7px;
+}
+
+.guide-card h2 {
+    margin-bottom: 20px;
+}
+
+.stage {
+    display: flex;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.stage > span {
+    width: 29px;
+    height: 29px;
+    flex: 0 0 29px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--soft);
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.stage strong {
+    font-size: 13px;
+}
+
+.stage p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+    margin-top: 3px;
+}
+
+.stack {
+    margin-top: 21px;
+    padding-top: 17px;
+    border-top: 1px solid var(--line);
+}
+
+.stack h3 {
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.stack span {
+    display: inline-block;
+    padding: 5px 8px;
+    margin: 0 4px 5px 0;
+    background: #f1f5f9;
+    color: #475569;
+    border-radius: 6px;
+    font-size: 11px;
+}
+
+.preview {
+    margin-top: 22px;
+}
+
+.hidden {
+    display: none;
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.preview-label {
+    color: var(--blue);
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.preview h2 {
+    margin-top: 5px;
+}
+
+.close {
+    font-size: 21px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+}
+
+.summary {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.summary div {
+    padding: 15px;
+    border-bottom: 1px solid var(--line);
+}
+
+.summary small {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+.summary strong {
+    font-size: 14px;
+    word-break: break-word;
+}
+
+footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 11px;
+    padding-top: 22px;
+}
+
+@media (max-width: 820px) {
+    .workspace {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .wrapper {
+        width: calc(100% - 16px);
+        padding-top: 16px;
+    }
+
+    .top, .card {
+        padding: 22px;
+    }
+
+    .two-columns, .summary {
+        grid-template-columns: 1fr;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+}
+
+/* ---- Result page (mimics StudentRegistrationServlet's generated HTML) ---- */
+
+#resultView {
+    width: min(700px, 100%);
+    margin: 32px auto;
+}
+
+#resultView .card {
+    padding: 34px;
+}
+
+.badge {
+    display: inline-block;
+    border-radius: 20px;
+    padding: 7px 11px;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.badge.ok {
+    background: var(--soft);
+    color: var(--blue);
+}
+
+.badge.err {
+    background: var(--red-soft);
+    color: var(--red);
+}
+
+#resultView h1 {
+    color: var(--navy);
+    font-size: 29px;
+    margin: 18px 0 8px;
+}
+
+#resultView .intro {
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.data {
+    margin: 23px 0;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.data .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+}
+
+.data .row:last-child {
+    border-bottom: 0;
+}
+
+.data .key {
+    color: var(--muted);
+    font-weight: bold;
+}
+
+.data .value {
+    color: var(--navy);
+    font-weight: bold;
+    text-align: right;
+}
+
+.error-box {
+    background: var(--red-soft);
+    border: 1px solid var(--red-line);
+    color: var(--red);
+    padding: 16px;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.back {
+    display: inline-block;
+    text-decoration: none;
+    background: var(--blue);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 9px;
+    font-weight: bold;
+    font-size: 13px;
+    margin-top: 24px;
+}
+
+.back:hover {
+    background: var(--blue-dark);
+}
+</style>
+</head>
+<body>
+<div class="wrapper" id="formView">
+    <header class="top">
+        <div class="course-chip">CO3 • EXPERIMENT 7</div>
+        <h1>Student Registration Form</h1>
+        <p>Registration Form Processing Using Servlet</p>
+        <div class="student-strip">
+            <span>SIMATS Engineering</span>
+            <span>IT Department</span>
+            <span>II Year</span>
+        </div>
+    </header>
+
+    <div class="workspace">
+        <section class="card registration-card">
+            <div class="section-heading">
+                <div class="icon">R</div>
+                <div>
+                    <h2>Registration Details</h2>
+                    <p>Complete the form and process the registration to view the result below.</p>
+                </div>
+            </div>
+
+            <form id="registrationForm">
+                <div class="field">
+                    <label for="studentName">Full Name</label>
+                    <input id="studentName" name="studentName" type="text"
+                           value="Harish T" required>
+                </div>
+
+                <div class="field">
+                    <label for="regNumber">Register Number</label>
+                    <input id="regNumber" name="regNumber" type="text"
+                           value="192521373" required>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email Address</label>
+                    <input id="email" name="email" type="email"
+                           placeholder="Enter your college email" required>
+                </div>
+
+                <div class="two-columns">
+                    <div class="field">
+                        <label for="department">Department</label>
+                        <select id="department" name="department" required>
+                            <option value="Information Technology" selected>Information Technology</option>
+                            <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                            <option value="Electronics & Communication Engineering">Electronics & Communication Engineering</option>
+                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="year">Year of Study</label>
+                        <select id="year" name="year" required>
+                            <option value="2nd Year" selected>2nd Year</option>
+                            <option value="1st Year">1st Year</option>
+                            <option value="3rd Year">3rd Year</option>
+                            <option value="4th Year">4th Year</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button type="submit" class="primary">Send to Servlet &amp; Process</button>
+                    <button type="button" id="previewButton" class="secondary">View Preview</button>
+                </div>
+            </form>
+
+            <div class="hint">
+                <strong>POST processing:</strong>
+                Clicking "Send to Servlet &amp; Process" simulates the same steps as
+                <code>StudentRegistrationServlet.doPost()</code>: reading each parameter,
+                validating it, and generating the result markup — shown right here on the
+                same page instead of a server round trip.
+            </div>
+        </section>
+
+        <aside class="card guide-card">
+            <h2>Processing Stages</h2>
+            <div class="stage">
+                <span>01</span>
+                <div><strong>Enter Details</strong><p>Student information is collected from the HTML form.</p></div>
+            </div>
+            <div class="stage">
+                <span>02</span>
+                <div><strong>POST Request</strong><p>The browser submits the form to the servlet.</p></div>
+            </div>
+            <div class="stage">
+                <span>03</span>
+                <div><strong>Read Parameters</strong><p><code>request.getParameter()</code> obtains each value.</p></div>
+            </div>
+            <div class="stage">
+                <span>04</span>
+                <div><strong>Validate & Respond</strong><p>The servlet validates fields and creates an HTML response.</p></div>
+            </div>
+
+            <div class="stack">
+                <h3>Technology Used</h3>
+                <span>HTML</span><span>CSS</span><span>JavaScript</span>
+                <span>Java Servlet</span><span>Apache Tomcat</span>
+            </div>
+        </aside>
+    </div>
+
+    <section id="previewPanel" class="card preview hidden">
+        <div class="preview-header">
+            <div>
+                <span class="preview-label">CLIENT-SIDE PREVIEW</span>
+                <h2>Registration Summary</h2>
+            </div>
+            <button type="button" id="closePreview" class="close">×</button>
+        </div>
+        <div class="summary">
+            <div><small>Name</small><strong id="pName">-</strong></div>
+            <div><small>Register Number</small><strong id="pReg">-</strong></div>
+            <div><small>Email</small><strong id="pEmail">-</strong></div>
+            <div><small>Department</small><strong id="pDept">-</strong></div>
+            <div><small>Year</small><strong id="pYear">-</strong></div>
+        </div>
+    </section>
+
+    <footer>Web Technology • ITA0202 • Harish T • 192521373</footer>
+</div>
+
+<!-- ===================== RESULT VIEW (mimics servlet-generated page) ===================== -->
+<div class="wrapper hidden" id="resultView">
+    <main class="card" id="resultCard"></main>
+</div>
+
+<script>
+// CO3 - Experiment 7 | Student Registration Form Processing (all-in-one)
+// This script simulates StudentRegistrationServlet.doPost() entirely client-side:
+// it reads the "form parameters", validates them the same way the servlet does,
+// and renders the same result markup the servlet would generate.
+
+const formView = document.getElementById("formView");
+const resultView = document.getElementById("resultView");
+const resultCard = document.getElementById("resultCard");
+
+const form = document.getElementById("registrationForm");
+const previewButton = document.getElementById("previewButton");
+const closePreview = document.getElementById("closePreview");
+const previewPanel = document.getElementById("previewPanel");
+
+function updatePreview() {
+    const name = document.getElementById("studentName").value.trim();
+    const reg = document.getElementById("regNumber").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const dept = document.getElementById("department").value;
+    const year = document.getElementById("year").value;
+
+    if (!name || !reg || !email || !dept || !year) {
+        alert("Please complete all registration fields.");
+        return;
+    }
+
+    document.getElementById("pName").textContent = name;
+    document.getElementById("pReg").textContent = reg;
+    document.getElementById("pEmail").textContent = email;
+    document.getElementById("pDept").textContent = dept;
+    document.getElementById("pYear").textContent = year;
+
+    previewPanel.classList.remove("hidden");
+    previewPanel.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+previewButton.addEventListener("click", updatePreview);
+
+closePreview.addEventListener("click", () => {
+    previewPanel.classList.add("hidden");
+});
+
+// Escapes text the same way the servlet's escape() helper does.
+function escapeHtml(value) {
+    if (value === null || value === undefined) return "";
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function isFilled(value) {
+    return value !== null && value !== undefined && value.trim() !== "";
+}
+
+// Equivalent of StudentRegistrationServlet.doPost()
+function processRegistration(params) {
+    const { studentName, regNumber, email, department, year } = params;
+
+    const valid = isFilled(studentName) && isFilled(regNumber)
+        && isFilled(email) && isFilled(department) && isFilled(year)
+        && email.includes("@");
+
+    let html = "";
+
+    if (!valid) {
+        html += `<span class="badge err">VALIDATION RESULT</span>`;
+        html += `<h1>Registration Needs Attention</h1>`;
+        html += `<p class="intro">The form was submitted, but one or more required values are missing or invalid.</p>`;
+        html += `<div class="error-box">Please return to the form and provide a valid name, register number, email, department and year.</div>`;
+    } else {
+        const time = new Date().toLocaleString("en-IN", {
+            day: "2-digit", month: "long", year: "numeric",
+            hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true
+        });
+
+        html += `<span class="badge ok">POST REQUEST PROCESSED</span>`;
+        html += `<h1>Registration Successful</h1>`;
+        html += `<p class="intro">StudentRegistrationServlet processed and validated the submitted registration details using <strong>doPost()</strong>.</p>`;
+        html += `<div class="data">`;
+        html += `<div class="row"><span class="key">Student Name</span><span class="value">${escapeHtml(studentName)}</span></div>`;
+        html += `<div class="row"><span class="key">Register Number</span><span class="value">${escapeHtml(regNumber)}</span></div>`;
+        html += `<div class="row"><span class="key">Email Address</span><span class="value">${escapeHtml(email)}</span></div>`;
+        html += `<div class="row"><span class="key">Department</span><span class="value">${escapeHtml(department)}</span></div>`;
+        html += `<div class="row"><span class="key">Year of Study</span><span class="value">${escapeHtml(year)}</span></div>`;
+        html += `<div class="row"><span class="key">Processed At</span><span class="value">${escapeHtml(time)}</span></div>`;
+        html += `</div>`;
+    }
+
+    html += `<a class="back" id="backToForm" href="#">← Return to Registration Form</a>`;
+
+    resultCard.innerHTML = html;
+
+    document.getElementById("backToForm").addEventListener("click", (e) => {
+        e.preventDefault();
+        resultView.classList.add("hidden");
+        formView.classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    formView.classList.add("hidden");
+    resultView.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
+    const params = {
+        studentName: document.getElementById("studentName").value,
+        regNumber: document.getElementById("regNumber").value,
+        email: document.getElementById("email").value,
+        department: document.getElementById("department").value,
+        year: document.getElementById("year").value
+    };
+
+    processRegistration(params);
+});
+</script>
+</body>
+</html>
