@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CO3 - EXP 10 | Thread-Safe Visitor Counter Servlet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* CO3 - EXP 10 | Thread-Safe Visitor Counter Servlet (all-in-one, restyled) */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary: #0d9488;
+  --primary-hover: #0f766e;
+  --danger: #dc2626;
+  --bg-gradient: linear-gradient(135deg, #ecfeff 0%, #f0fdfa 100%);
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #99f6e4;
+  --radius: 16px;
+  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-main);
+  min-height: 100vh;
+  padding: 30px 20px 60px;
+}
+
+.bg-pattern {
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(#5eead4 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.badge {
+  display: inline-block;
+  background: #ccfbf1;
+  color: #0f766e;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.page-header h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.98rem;
+}
+
+.subtitle code {
+  font-family: monospace;
+  background: #ccfbf1;
+  color: #0f766e;
+  padding: 1px 6px;
+  border-radius: 5px;
+}
+
+.student-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.student-strip span {
+  border: 1px solid var(--border);
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 6px 11px;
+  color: #0f766e;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Dual Counter Grid */
+.counter-display-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 750px) {
+  .counter-display-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.counter-card {
+  border-radius: var(--radius);
+  padding: 30px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.card-unsafe {
+  background: #fff1f2;
+  border: 2px solid #fecdd3;
+}
+
+.card-safe {
+  background: #f0fdfa;
+  border: 2px solid #99f6e4;
+}
+
+.counter-header {
+  margin-bottom: 12px;
+}
+
+.hazard-badge {
+  background: #ffe4e6;
+  color: #e11d48;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #fecdd3;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.safe-badge {
+  background: #ccfbf1;
+  color: #0f766e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #99f6e4;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.counter-header h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.counter-digit {
+  font-family: 'Outfit', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin: 10px 0;
+  line-height: 1;
+}
+
+.card-unsafe .counter-digit { color: #e11d48; }
+.card-safe .counter-digit { color: #0d9488; }
+
+.counter-desc {
+  font-size: 0.85rem;
+  color: #475569;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.counter-stat {
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+  padding-top: 12px;
+}
+
+.text-danger { color: #dc2626; }
+.text-success { color: #0d9488; }
+
+/* Main Layout */
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 30px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+}
+
+.card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0fdfa;
+}
+
+.btn-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn {
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-secondary { background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
+.btn-secondary:hover { background: #f1f5f9; color: #0f172a; }
+.btn-warning { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+.btn-warning:hover { background: #fde68a; }
+.btn-danger { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+.btn-danger:hover { background: #fecaca; }
+.btn-outline { background: transparent; color: #64748b; border: 1.5px dashed #cbd5e1; }
+.btn-outline:hover { background: #f8fafc; color: #0f172a; border-color: #94a3b8; }
+
+.traffic-progress {
+  margin-top: 20px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  color: #334155;
+}
+
+.progress-bar-track {
+  background: #e2e8f0;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  background: #0d9488;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.1s linear;
+}
+
+/* Concept List */
+.concept-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.concept-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.concept-item strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.concept-item p {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  padding-top: 30px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* ---- Live servlet endpoint view (mimics VisitorCounterServlet's generated page) ---- */
+
+#servletView {
+  max-width: 750px;
+  margin: 42px auto 0;
+}
+
+#servletView .box {
+  background: rgba(6, 78, 59, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  color: #f8fafc;
+}
+
+.srv-badge {
+  background: #10b981;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-bottom: 14px;
+}
+
+#servletView h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.1rem;
+  margin: 0 0 10px;
+  color: #a7f3d0;
+}
+
+#servletView .srv-intro {
+  color: #a7f3d0;
+}
+
+.srv-counter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+@media (max-width: 560px) {
+  .srv-counter-grid { grid-template-columns: 1fr; }
+}
+
+.srv-counter-box {
+  background: #0f172a;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #047857;
+}
+
+.srv-box-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.srv-box-val {
+  font-size: 2.2rem;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+}
+
+.srv-text-unsafe { color: #f87171; }
+.srv-text-safe { color: #34d399; }
+
+.srv-meta-box {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  font-size: 0.88rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.srv-meta-box div {
+  padding: 4px 0;
+}
+
+.srv-meta-box code {
+  font-family: monospace;
+  color: #a7f3d0;
+}
+
+.srv-btn-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.srv-btn {
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+}
+
+.srv-btn-primary { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+.srv-btn-secondary { background: #064e3b; color: #a7f3d0; border: 1px solid #047857; }
+</style>
+</head>
+<body>
+<div class="bg-pattern"></div>
+
+<div class="container" id="dashboardView">
+  <header class="page-header">
+    <div class="badge">CO3 — Experiment 10</div>
+    <h1>Thread-Safe Concurrent Visitor Counter Using Servlet</h1>
+    <p class="subtitle">Analysing Race Conditions in Shared Instance Variables vs <code>AtomicInteger</code> / <code>synchronized</code> Concurrency Controls</p>
+    <div class="student-strip">
+      <span>SIMATS Engineering</span>
+      <span>IT Department</span>
+      <span>Harish T • 192521373</span>
+    </div>
+  </header>
+
+  <!-- Side-by-Side Dual Counter Visualizer -->
+  <div class="counter-display-grid">
+    <!-- Unsafe Counter -->
+    <div class="counter-card card-unsafe">
+      <div class="counter-header">
+        <span class="hazard-badge">⚠️ Race-Prone</span>
+        <h3>Standard Primitive (int)</h3>
+      </div>
+      <div class="counter-digit" id="unsafeCounter">0</div>
+      <p class="counter-desc">Non-atomic read-modify-write. Concurrent requests interleave operations resulting in <strong>lost updates</strong>.</p>
+      <div class="counter-stat">Lost Updates: <strong id="lostUpdatesCount" class="text-danger">0</strong></div>
+    </div>
+
+    <!-- Thread-Safe Atomic Counter -->
+    <div class="counter-card card-safe">
+      <div class="counter-header">
+        <span class="safe-badge">🛡️ Thread-Safe</span>
+        <h3>AtomicInteger / Synchronized</h3>
+      </div>
+      <div class="counter-digit" id="safeCounter">0</div>
+      <p class="counter-desc">Uses hardware-level lock-free <strong>Compare-And-Swap (CAS)</strong>. Every single request is counted accurately.</p>
+      <div class="counter-stat">Accuracy: <strong class="text-success">100.0%</strong></div>
+    </div>
+  </div>
+
+  <!-- Interactive Simulation Studio -->
+  <div class="main-layout">
+    <section class="card controls-card">
+      <h2 class="card-title">⚡ Traffic Simulation Lab</h2>
+
+      <div class="btn-grid">
+        <button id="singleHitBtn" class="btn btn-secondary">👆 Single Visitor Hit (1 Request)</button>
+        <button id="concurrent50Btn" class="btn btn-warning">⚡ Fire 50 Concurrent Threads</button>
+        <button id="concurrent200Btn" class="btn btn-danger">🔥 Fire 200 High-Contention Threads</button>
+        <button id="resetCountersBtn" class="btn btn-outline">🔄 Reset Counters</button>
+        <button id="openEndpointBtn" type="button" class="btn btn-primary">🌐 Open Live Tomcat Servlet Endpoint</button>
+      </div>
+
+      <div class="traffic-progress" id="progressBox" style="display:none;">
+        <div class="progress-label"><span>Simulating Traffic:</span> <strong id="progressText">0 / 0</strong></div>
+        <div class="progress-bar-track">
+          <div id="progressFill" class="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Concurrency Knowledge Base -->
+    <section class="card info-card">
+      <h2 class="card-title">💡 Servlet Concurrency Deep-Dive</h2>
+      <div class="concept-list">
+        <div class="concept-item">
+          <strong>1. Servlet Singleton Architecture</strong>
+          <p>Servlet containers (Tomcat) instantiate only <em>one single instance</em> of each servlet. All incoming client requests share that same instance.</p>
+        </div>
+        <div class="concept-item">
+          <strong>2. Shared Instance Variables vs Local Variables</strong>
+          <p>Instance fields (e.g., <code>private int count</code>) live on the heap and are shared across all worker threads. Local variables (inside <code>doGet()</code>) live on the thread's call stack and are 100% thread-safe.</p>
+        </div>
+        <div class="concept-item">
+          <strong>3. How AtomicInteger Fixes Race Conditions</strong>
+          <p><code>AtomicInteger.incrementAndGet()</code> uses CPU-level atomic instructions, preventing threads from reading stale values during concurrent execution.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>Web Technology • ITA0202 • Harish T • 192521373</footer>
+</div>
+
+<!-- ===================== LIVE SERVLET ENDPOINT VIEW (mimics VisitorCounterServlet's generated page) ===================== -->
+<div class="container hidden" id="servletView">
+  <div class="box" id="servletBox"></div>
+</div>
+
+<script>
+// CO3 - EXP 10 | Thread-Safe Concurrent Visitor Counter Using Servlet (all-in-one)
+// The traffic simulation lab (single hit, 50/200 concurrent threads, reset,
+// race-condition demo) works exactly as before. "Open Live Tomcat Servlet
+// Endpoint" now simulates actually hitting VisitorCounterServlet's doGet():
+// it increments the unsafe int, the AtomicInteger, and the synchronized
+// counter together (as a single real request would, with no race since it's
+// one call), and renders the same dynamic HTML the servlet's PrintWriter
+// would produce, right here on the same page.
+
+const dashboardView = document.getElementById('dashboardView');
+const servletView = document.getElementById('servletView');
+const servletBox = document.getElementById('servletBox');
+
+let unsafeCount = 0;
+let safeCount = 0;
+let isSimulating = false;
+
+// Separate counters that model the servlet's three actual fields, only
+// touched by the "live endpoint" simulated requests (mirrors doGet()).
+let unsafeHitCount = 0;
+let safeAtomicCount = 0;
+let safeSynchronizedCount = 0;
+
+const unsafeCounterEl = document.getElementById('unsafeCounter');
+const safeCounterEl = document.getElementById('safeCounter');
+const lostUpdatesCountEl = document.getElementById('lostUpdatesCount');
+
+const singleHitBtn = document.getElementById('singleHitBtn');
+const concurrent50Btn = document.getElementById('concurrent50Btn');
+const concurrent200Btn = document.getElementById('concurrent200Btn');
+const resetCountersBtn = document.getElementById('resetCountersBtn');
+const openEndpointBtn = document.getElementById('openEndpointBtn');
+
+const progressBox = document.getElementById('progressBox');
+const progressText = document.getElementById('progressText');
+const progressFill = document.getElementById('progressFill');
+
+function updateDisplays() {
+  unsafeCounterEl.textContent = unsafeCount;
+  safeCounterEl.textContent = safeCount;
+  const lost = Math.max(0, safeCount - unsafeCount);
+  lostUpdatesCountEl.textContent = `${lost} updates lost!`;
+}
+
+// 1. Single Hit
+singleHitBtn.addEventListener('click', () => {
+  if (isSimulating) return;
+  unsafeCount++;
+  safeCount++;
+  updateDisplays();
+});
+
+// 2. High-Contention Concurrent Simulation (Demonstrates read-modify-write race condition)
+function simulateConcurrentTraffic(totalThreads, raceHazardProbability) {
+  if (isSimulating) return;
+  isSimulating = true;
+
+  progressBox.style.display = 'block';
+  let completed = 0;
+
+  for (let i = 0; i < totalThreads; i++) {
+    setTimeout(() => {
+      safeCount++;
+
+      const suffersRaceHazard = Math.random() < raceHazardProbability;
+      if (!suffersRaceHazard) {
+        unsafeCount++;
+      }
+
+      completed++;
+      progressText.textContent = `${completed} / ${totalThreads}`;
+      progressFill.style.width = `${(completed / totalThreads) * 100}%`;
+      updateDisplays();
+
+      if (completed === totalThreads) {
+        isSimulating = false;
+        setTimeout(() => {
+          progressBox.style.display = 'none';
+        }, 800);
+      }
+    }, Math.random() * 600);
+  }
+}
+
+concurrent50Btn.addEventListener('click', () => {
+  simulateConcurrentTraffic(50, 0.22);
+});
+
+concurrent200Btn.addEventListener('click', () => {
+  simulateConcurrentTraffic(200, 0.38);
+});
+
+// 3. Reset Counters
+resetCountersBtn.addEventListener('click', () => {
+  if (isSimulating) return;
+  unsafeCount = 0;
+  safeCount = 0;
+  updateDisplays();
+  lostUpdatesCountEl.textContent = '0';
+});
+
+function randomThreadName() {
+  return `http-nio-8080-exec-${Math.floor(Math.random() * 20) + 1}`;
+}
+
+function randomClientIp() {
+  return `192.168.${Math.floor(Math.random() * 254) + 1}.${Math.floor(Math.random() * 254) + 1}`;
+}
+
+// Equivalent of VisitorCounterServlet.doGet(), rendered inline instead of a real request
+function renderServletEndpoint() {
+  const clientIp = randomClientIp();
+  const threadName = randomThreadName();
+
+  unsafeHitCount++;
+  safeAtomicCount++;
+  safeSynchronizedCount++;
+
+  let html = '';
+  html += `<span class="srv-badge">Servlet Concurrency Inspector</span>`;
+  html += `<h1>Concurrent Visitor Counter</h1>`;
+  html += `<p class="srv-intro">Servlet instances are singletons shared across multiple worker threads. Instance variables must be synchronized or atomic to avoid lost updates.</p>`;
+
+  html += `<div class="srv-counter-grid">`;
+  html += `<div class="srv-counter-box">
+    <div class="srv-box-title srv-text-unsafe">⚠️ Unsafe Primitive (int)</div>
+    <div class="srv-box-val srv-text-unsafe">${unsafeHitCount}</div>
+    <p style="font-size:0.75rem; color:#94a3b8; margin:6px 0 0;">Race condition hazard under concurrent traffic</p>
+  </div>`;
+  html += `<div class="srv-counter-box">
+    <div class="srv-box-title srv-text-safe">🛡️ Thread-Safe (AtomicInteger)</div>
+    <div class="srv-box-val srv-text-safe">${safeAtomicCount}</div>
+    <p style="font-size:0.75rem; color:#94a3b8; margin:6px 0 0;">Lock-free atomic CAS memory consistency</p>
+  </div>`;
+  html += `</div>`;
+
+  html += `<div class="srv-meta-box">
+    <div><strong>Current Worker Thread:</strong> <code>${threadName}</code></div>
+    <div><strong>Request Client IP (Local Variable):</strong> <code>${clientIp}</code></div>
+    <div><strong>Synchronized Block Counter:</strong> <code>${safeSynchronizedCount} hits</code></div>
+  </div>`;
+
+  html += `<div class="srv-btn-row">`;
+  html += `<button type="button" class="srv-btn srv-btn-primary" id="hitCounterBtn">🔄 Hit Counter (GET)</button>`;
+  html += `<button type="button" class="srv-btn srv-btn-secondary" id="backToPortalBtn">&larr; Back to Client Portal</button>`;
+  html += `</div>`;
+
+  servletBox.innerHTML = html;
+
+  document.getElementById('hitCounterBtn').addEventListener('click', renderServletEndpoint);
+  document.getElementById('backToPortalBtn').addEventListener('click', () => {
+    servletView.classList.add('hidden');
+    dashboardView.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+openEndpointBtn.addEventListener('click', () => {
+  dashboardView.classList.add('hidden');
+  servletView.classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  renderServletEndpoint();
+});
+</script>
+</body>
+</html>
