@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CO3 - EXP 8 | Online Student Result Processing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* CO3 - EXP 8 | Online Student Result Processing (all-in-one, restyled) */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary: #7c3aed;
+  --primary-hover: #6d28d9;
+  --accent: #0d9488;
+  --bg-gradient: linear-gradient(135deg, #faf5ff 0%, #f0fdfa 100%);
+  --card-bg: #ffffff;
+  --text-main: #1e1b2e;
+  --text-muted: #6b7280;
+  --border: #e9d5ff;
+  --radius: 16px;
+  --shadow: 0 10px 25px -5px rgba(76, 29, 149, 0.10), 0 8px 10px -6px rgba(76, 29, 149, 0.05);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-main);
+  min-height: 100vh;
+  padding: 30px 20px 60px;
+}
+
+.bg-pattern {
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(#c4b5fd 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.badge {
+  display: inline-block;
+  background: #f3e8ff;
+  color: #7c3aed;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.page-header h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #1e1b2e;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.98rem;
+}
+
+.student-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.student-strip span {
+  border: 1px solid var(--border);
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 6px 11px;
+  color: #6d28d9;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 30px;
+  align-items: start;
+}
+
+@media (max-width: 950px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+}
+
+.card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #faf5ff;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.required { color: #dc2626; }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+input[type="text"], input[type="number"] {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  background: #ffffff;
+  transition: all 0.2s;
+}
+
+input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+.marks-section {
+  background: #faf5ff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.marks-header {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #7c3aed;
+  margin-bottom: 14px;
+}
+
+.marks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.btn-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 11px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.btn-primary { background: var(--primary); color: white; flex: 1.3; }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+.btn-secondary { background: #f3e8ff; color: #6d28d9; border: 1px solid #e9d5ff; flex: 1; }
+.btn-secondary:hover { background: #e9d5ff; }
+
+/* Grade Scale */
+.grade-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.grade-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #faf5ff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.grade-badge {
+  width: 32px;
+  height: 26px;
+  border-radius: 6px;
+  color: white;
+  font-weight: 800;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grade-o { background: #7c3aed; }
+.grade-a-plus { background: #0d9488; }
+.grade-a { background: #0891b2; }
+.grade-b { background: #16a34a; }
+.grade-ra { background: #dc2626; }
+
+.grade-range { font-family: monospace; font-weight: 700; color: #475569; }
+.grade-desc { color: #64748b; }
+
+.validation-note {
+  background: #f0fdfa;
+  border: 1px solid #99f6e4;
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 0.82rem;
+  color: #0d9488;
+}
+
+.validation-note h4 {
+  margin-bottom: 6px;
+}
+
+.validation-note ul {
+  padding-left: 18px;
+}
+
+/* Servlet response view (mimics StudentResultServlet's generated page) */
+#servletView {
+  max-width: 780px;
+  margin: 42px auto 0;
+}
+
+#servletView .box {
+  background: rgba(30, 27, 46, 0.96);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.res-badge {
+  background: #7c3aed;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-bottom: 14px;
+}
+
+.res-badge.err { background: #ef4444; }
+
+#servletView h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.1rem;
+  margin: 0 0 8px;
+  color: #f8fafc;
+}
+
+.res-meta {
+  color: #a78bfa;
+}
+
+.res-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background: #17142a;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #382f52;
+}
+
+.res-table th {
+  background: #241f3a;
+  color: #b8aed6;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.res-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #241f3a;
+  font-size: 0.9rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 650px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.stat-box {
+  background: #17142a;
+  border: 1px solid #382f52;
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #b8aed6;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.stat-val {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #2dd4bf;
+}
+
+.pass-pill {
+  background: #064e3b;
+  color: #6ee7b7;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: inline-block;
+}
+
+.fail-pill {
+  background: #7f1d1d;
+  color: #fca5a5;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: inline-block;
+}
+
+.res-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #7c3aed, #0d9488);
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-top: 22px;
+  cursor: pointer;
+  border: none;
+}
+
+.err-box {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid #ef4444;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  color: #fca5a5;
+}
+
+.err-box ul {
+  padding-left: 18px;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+<body>
+<div class="bg-pattern"></div>
+
+<div class="container" id="formView">
+  <header class="page-header">
+    <div class="badge">CO3 — Experiment 8</div>
+    <h1>Online Student Result Processing Using Servlet</h1>
+    <p class="subtitle">Processing 5 Subject Marks, Computing Total, Average, Highest/Lowest Marks, Grade &amp; Pass/Fail Status via Servlet</p>
+    <div class="student-strip">
+      <span>SIMATS Engineering</span>
+      <span>IT Department</span>
+      <span>II Year • ITA0202</span>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <!-- Input Marks Form -->
+    <section class="card form-card">
+      <h2 class="card-title">📝 Student Semester Marks Entry</h2>
+
+      <form id="resultForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="studentName">Student Full Name <span class="required">*</span></label>
+            <input type="text" id="studentName" name="studentName" value="Harish T" required>
+          </div>
+
+          <div class="form-group">
+            <label for="regNumber">Register Number <span class="required">*</span></label>
+            <input type="text" id="regNumber" name="regNumber" value="192521373" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="department">Department</label>
+          <input type="text" id="department" name="department" value="Information Technology" required>
+        </div>
+
+        <div class="marks-section">
+          <h3 class="marks-header">Subject Marks (Out of 100)</h3>
+          <div class="marks-grid">
+            <div class="form-group">
+              <label for="mark1">1. Web Technology (ITA0202)</label>
+              <input type="number" id="mark1" name="mark1" min="0" max="100" value="94" required>
+            </div>
+            <div class="form-group">
+              <label for="mark2">2. DBMS</label>
+              <input type="number" id="mark2" name="mark2" min="0" max="100" value="88" required>
+            </div>
+            <div class="form-group">
+              <label for="mark3">3. Data Structures</label>
+              <input type="number" id="mark3" name="mark3" min="0" max="100" value="92" required>
+            </div>
+            <div class="form-group">
+              <label for="mark4">4. Operating Systems</label>
+              <input type="number" id="mark4" name="mark4" min="0" max="100" value="85" required>
+            </div>
+            <div class="form-group">
+              <label for="mark5">5. Computer Networks</label>
+              <input type="number" id="mark5" name="mark5" min="0" max="100" value="90" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="submit" class="btn btn-primary">🚀 Send to Servlet &amp; Process</button>
+          <button type="button" id="previewBtn" class="btn btn-secondary">⚡ Quick Preview</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Grade Scheme & Logic Info -->
+    <section class="card info-card">
+      <h2 class="card-title">📊 Grading Scale &amp; Processing Rules</h2>
+
+      <div class="grade-table">
+        <div class="grade-row">
+          <span class="grade-badge grade-o">O</span>
+          <span class="grade-range">90% - 100%</span>
+          <span class="grade-desc">Outstanding</span>
+        </div>
+        <div class="grade-row">
+          <span class="grade-badge grade-a-plus">A+</span>
+          <span class="grade-range">80% - 89%</span>
+          <span class="grade-desc">Excellent</span>
+        </div>
+        <div class="grade-row">
+          <span class="grade-badge grade-a">A</span>
+          <span class="grade-range">70% - 79%</span>
+          <span class="grade-desc">Very Good</span>
+        </div>
+        <div class="grade-row">
+          <span class="grade-badge grade-b">B+</span>
+          <span class="grade-range">60% - 69%</span>
+          <span class="grade-desc">Good</span>
+        </div>
+        <div class="grade-row">
+          <span class="grade-badge grade-ra">RA</span>
+          <span class="grade-range">&lt; 50%</span>
+          <span class="grade-desc">Reappear / Fail</span>
+        </div>
+      </div>
+
+      <div class="validation-note">
+        <h4>🛡️ Server-Side Validation Specs:</h4>
+        <ul>
+          <li>Checks non-numeric &amp; missing mark strings</li>
+          <li>Enforces range <code>0 &le; mark &le; 100</code></li>
+          <li>Subject pass cutoff: 50 marks</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- Quick Preview (client-side only, before "submitting") -->
+  <div id="previewWrapper" class="sim-wrapper hidden" style="margin-top:35px;">
+    <div class="card">
+      <h2 class="card-title">⚡ Quick Preview (not yet processed)</h2>
+      <p class="text-muted" style="color:var(--text-muted); font-size:0.9rem;">This is only a glance at your entered values. Click "Send to Servlet &amp; Process" to run full validation and generate the official result.</p>
+      <div id="previewBody" style="margin-top:14px; font-size:0.9rem; line-height:1.8;"></div>
+    </div>
+  </div>
+
+  <footer style="text-align:center; color:var(--text-muted); font-size:0.8rem; padding-top:30px;">
+    Web Technology • ITA0202 • Harish T • 192521373
+  </footer>
+</div>
+
+<!-- ===================== SERVLET RESPONSE VIEW (mimics StudentResultServlet's generated page) ===================== -->
+<div class="container hidden" id="servletView">
+  <div class="box" id="servletBox"></div>
+</div>
+
+<script>
+// CO3 - EXP 8 | Online Student Result Processing (all-in-one)
+// This script simulates StudentResultServlet.doPost() entirely client-side:
+// it reads the "form parameters", runs the exact same validation and
+// grading logic, and renders the same result markup the servlet would
+// generate — right here on the same page instead of a server round trip.
+
+const formView = document.getElementById('formView');
+const servletView = document.getElementById('servletView');
+const servletBox = document.getElementById('servletBox');
+
+const form = document.getElementById('resultForm');
+const previewBtn = document.getElementById('previewBtn');
+const previewWrapper = document.getElementById('previewWrapper');
+const previewBody = document.getElementById('previewBody');
+
+const subNames = [
+  'Web Technology',
+  'Database Management Systems',
+  'Data Structures & Algorithms',
+  'Operating Systems',
+  'Computer Networks'
+];
+
+function escapeHtml(value) {
+  if (value === null || value === undefined) return '';
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function getFieldValues() {
+  return {
+    studentName: document.getElementById('studentName').value,
+    regNumber: document.getElementById('regNumber').value,
+    department: document.getElementById('department').value,
+    markParams: [
+      document.getElementById('mark1').value,
+      document.getElementById('mark2').value,
+      document.getElementById('mark3').value,
+      document.getElementById('mark4').value,
+      document.getElementById('mark5').value
+    ]
+  };
+}
+
+// Quick client-side glance, separate from the servlet simulation below.
+previewBtn.addEventListener('click', () => {
+  const v = getFieldValues();
+  previewBody.innerHTML = `
+    <div><strong>Name:</strong> ${escapeHtml(v.studentName) || '-'}</div>
+    <div><strong>Register No:</strong> ${escapeHtml(v.regNumber) || '-'}</div>
+    <div><strong>Department:</strong> ${escapeHtml(v.department) || '-'}</div>
+    <div><strong>Marks entered:</strong> ${v.markParams.map(escapeHtml).join(', ')}</div>
+  `;
+  previewWrapper.classList.remove('hidden');
+  previewWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+// Equivalent of StudentResultServlet.doPost()
+function processResult(v) {
+  let hasError = false;
+  const errors = [];
+  const marks = [0, 0, 0, 0, 0];
+
+  if (!v.studentName || !v.studentName.trim()) {
+    hasError = true;
+    errors.push('Student Name cannot be empty.');
+  }
+  if (!v.regNumber || !v.regNumber.trim()) {
+    hasError = true;
+    errors.push('Register Number cannot be empty.');
+  }
+
+  for (let i = 0; i < 5; i++) {
+    const mStr = v.markParams[i];
+    if (mStr === null || mStr === undefined || mStr.trim() === '') {
+      hasError = true;
+      errors.push(`Mark for ${subNames[i]} is missing.`);
+      continue;
+    }
+    const val = Number(mStr.trim());
+    if (!Number.isInteger(val)) {
+      hasError = true;
+      errors.push(`Mark for ${subNames[i]} must be a valid integer number.`);
+    } else if (val < 0 || val > 100) {
+      hasError = true;
+      errors.push(`Mark for ${subNames[i]} must be between 0 and 100 (Received: ${val}).`);
+    } else {
+      marks[i] = val;
+    }
+  }
+
+  let html = '';
+
+  if (hasError) {
+    html += `<span class="res-badge err">Validation Error</span>`;
+    html += `<h1 style="color:#f87171;">Marks Processing Failed</h1>`;
+    html += `<p style="color:#cbd5e1;">Please review and correct the following errors:</p>`;
+    html += `<div class="err-box"><ul>${errors.map(e => `<li>${escapeHtml(e)}</li>`).join('')}</ul></div>`;
+  } else {
+    let total = 0;
+    let highest = marks[0];
+    let lowest = marks[0];
+    let allPassed = true;
+
+    marks.forEach(m => {
+      total += m;
+      if (m > highest) highest = m;
+      if (m < lowest) lowest = m;
+      if (m < 50) allPassed = false;
+    });
+
+    const average = total / 5.0;
+    let grade;
+    if (average >= 90) grade = 'O (Outstanding)';
+    else if (average >= 80) grade = 'A+ (Excellent)';
+    else if (average >= 70) grade = 'A (Very Good)';
+    else if (average >= 60) grade = 'B+ (Good)';
+    else if (average >= 50) grade = 'B (Average)';
+    else grade = 'RA (Reappear)';
+
+    const status = allPassed ? 'PASS' : 'FAIL';
+
+    html += `<span class="res-badge">Semester Exam Result</span>`;
+    html += `<h1>${escapeHtml(v.studentName)}</h1>`;
+    html += `<p class="res-meta">Register No: <strong style="color:#2dd4bf; font-family:monospace;">${escapeHtml(v.regNumber.toUpperCase())}</strong> | Dept: ${escapeHtml(v.department)}</p>`;
+
+    html += `<div class="stats-grid">`;
+    html += `<div class="stat-box"><span class="stat-label">Total Marks</span><span class="stat-val">${total} / 500</span></div>`;
+    html += `<div class="stat-box"><span class="stat-label">Average</span><span class="stat-val">${average.toFixed(2)}%</span></div>`;
+    html += `<div class="stat-box"><span class="stat-label">Grade</span><span class="stat-val" style="font-size:1rem;">${grade}</span></div>`;
+    html += `<div class="stat-box"><span class="stat-label">Result</span><span class="${allPassed ? 'pass-pill' : 'fail-pill'}">${status}</span></div>`;
+    html += `</div>`;
+
+    html += `<table class="res-table">`;
+    html += `<thead><tr><th>#</th><th>Subject Name</th><th>Max Marks</th><th>Marks Scored</th><th>Status</th></tr></thead><tbody>`;
+    for (let i = 0; i < 5; i++) {
+      const subPass = marks[i] >= 50;
+      html += `<tr>
+        <td>${i + 1}</td>
+        <td><strong>${subNames[i]}</strong></td>
+        <td>100</td>
+        <td style="font-weight:700; color:${subPass ? '#2dd4bf' : '#f87171'};">${marks[i]}</td>
+        <td><span class="${subPass ? 'pass-pill' : 'fail-pill'}">${subPass ? 'PASS' : 'FAIL'}</span></td>
+      </tr>`;
+    }
+    html += `</tbody></table>`;
+  }
+
+  html += `<button type="button" class="res-btn" id="backToForm">&larr; Process Another Result</button>`;
+
+  servletBox.innerHTML = html;
+
+  document.getElementById('backToForm').addEventListener('click', () => {
+    servletView.classList.add('hidden');
+    formView.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  formView.classList.add('hidden');
+  servletView.classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  processResult(getFieldValues());
+});
+</script>
+</body>
+</html>

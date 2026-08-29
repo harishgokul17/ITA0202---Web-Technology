@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CO3 - EXP 9 | Servlet Lifecycle Demonstration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* CO3 - EXP 9 | Servlet Lifecycle Demonstration (all-in-one, restyled) */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --violet: #8b5cf6;
+  --bg-gradient: linear-gradient(135deg, #f5f3ff 0%, #eef2ff 100%);
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #ddd6fe;
+  --radius: 16px;
+  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-main);
+  min-height: 100vh;
+  padding: 30px 20px 60px;
+}
+
+.bg-pattern {
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(#c7d2fe 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.6;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.badge {
+  display: inline-block;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.page-header h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.98rem;
+}
+
+.subtitle code {
+  font-family: monospace;
+  background: #eef2ff;
+  color: #4f46e5;
+  padding: 1px 6px;
+  border-radius: 5px;
+}
+
+.student-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.student-strip span {
+  border: 1px solid var(--border);
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 6px 11px;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Lifecycle Track */
+.lifecycle-track {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.phase-card {
+  background: #ffffff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  position: relative;
+  transition: all 0.25s;
+}
+
+.phase-card.active-phase {
+  border-color: var(--violet);
+  box-shadow: 0 0 0 2px #ddd6fe, 0 10px 25px -5px rgba(139, 92, 246, 0.2);
+}
+
+.phase-number {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.phase-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.phase-method {
+  font-family: monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.phase-count {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 10px;
+}
+
+.phase-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Main Layout */
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 30px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+}
+
+.card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f5f3ff;
+}
+
+.btn-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.btn {
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.btn-primary { background: linear-gradient(135deg, var(--primary), var(--violet)); color: white; }
+.btn-primary:hover { filter: brightness(0.95); }
+.btn-secondary { background: #eef2ff; color: #4f46e5; border: 1px solid #c7d2fe; }
+.btn-secondary:hover { background: #e0e7ff; }
+.btn-warning { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+.btn-warning:hover { background: #fde68a; }
+.btn-outline { background: transparent; color: #64748b; border: 1.5px dashed #cbd5e1; }
+.btn-outline:hover { background: #f8fafc; color: #0f172a; border-color: #94a3b8; }
+.btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+
+.stats-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-pill {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.text-green { color: #16a34a; font-weight: 700; }
+.text-red { color: #dc2626; font-weight: 700; }
+.text-blue { color: #38bdf8 !important; }
+
+/* Log Console */
+.log-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f8fafc;
+}
+
+.console-box {
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 10px;
+  padding: 16px;
+  height: 320px;
+  overflow-y: auto;
+  font-family: monospace;
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.log-line {
+  line-height: 1.4;
+  word-break: break-all;
+  animation: fadeInLog 0.2s ease-out;
+}
+
+@keyframes fadeInLog {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  padding-top: 30px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* ---- Live servlet endpoint view (mimics LifecycleServlet's generated page) ---- */
+
+#servletView {
+  max-width: 720px;
+  margin: 42px auto 0;
+}
+
+#servletView .box {
+  background: rgba(30, 27, 75, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  color: #f8fafc;
+}
+
+.srv-badge {
+  background: var(--violet);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-bottom: 14px;
+}
+
+#servletView h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.2rem;
+  margin: 0 0 10px;
+  color: #c4b5fd;
+}
+
+#servletView .srv-intro {
+  color: #94a3b8;
+}
+
+#servletView .srv-intro code {
+  font-family: monospace;
+  color: #c4b5fd;
+}
+
+.srv-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 24px 0;
+}
+
+@media (max-width: 560px) {
+  .srv-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.srv-step-box {
+  background: #0f172a;
+  border: 1px solid #312e81;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.srv-step-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.srv-step-val {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #38bdf8;
+}
+
+.srv-info-list {
+  background: #0f172a;
+  border: 1px solid #312e81;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+}
+
+.srv-info-list div {
+  padding: 6px 0;
+  border-bottom: 1px dashed #1e1b4b;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.srv-info-list div:last-child {
+  border-bottom: 0;
+}
+
+.srv-info-list span {
+  color: #94a3b8;
+}
+
+.srv-btn-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.srv-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+}
+
+.srv-btn-primary { background: linear-gradient(135deg, #6366f1, #a855f7); color: white; }
+.srv-btn-secondary { background: #1e1b4b; color: #c4b5fd; border: 1px solid #4338ca; }
+</style>
+</head>
+<body>
+<div class="bg-pattern"></div>
+
+<div class="container" id="dashboardView">
+  <header class="page-header">
+    <div class="badge">CO3 — Experiment 9</div>
+    <h1>Servlet Lifecycle Demonstration</h1>
+    <p class="subtitle">Inspecting <code>constructor()</code>, <code>init(ServletConfig)</code>, <code>service() / doGet()</code>, and <code>destroy()</code></p>
+    <div class="student-strip">
+      <span>SIMATS Engineering</span>
+      <span>IT Department</span>
+      <span>Harish T • 192521373</span>
+    </div>
+  </header>
+
+  <!-- Top Lifecycle Phases Visualizer -->
+  <div class="lifecycle-track">
+    <div class="phase-card" id="phaseConstructor">
+      <div class="phase-number">1</div>
+      <div class="phase-title">Loading &amp; Instantiation</div>
+      <div class="phase-method">Constructor()</div>
+      <div class="phase-count">Executed: <strong id="valConstructor">1</strong> time</div>
+      <p class="phase-desc">Tomcat loads the bytecode and creates a single instance via default constructor.</p>
+    </div>
+
+    <div class="phase-card" id="phaseInit">
+      <div class="phase-number">2</div>
+      <div class="phase-title">Initialization</div>
+      <div class="phase-method">init(ServletConfig)</div>
+      <div class="phase-count">Executed: <strong id="valInit">1</strong> time</div>
+      <p class="phase-desc">Executed once per lifecycle to load configuration parameters &amp; database pools.</p>
+    </div>
+
+    <div class="phase-card active-phase" id="phaseService">
+      <div class="phase-number">3</div>
+      <div class="phase-title">Request Servicing</div>
+      <div class="phase-method">service() &rarr; doGet()</div>
+      <div class="phase-count">Executed: <strong id="valService" style="color:#6366f1;">0</strong> times</div>
+      <p class="phase-desc">Executed on every client HTTP request in a dedicated worker thread.</p>
+    </div>
+
+    <div class="phase-card" id="phaseDestroy">
+      <div class="phase-number">4</div>
+      <div class="phase-title">Destruction &amp; GC</div>
+      <div class="phase-method">destroy()</div>
+      <div class="phase-count">Executed: <strong id="valDestroy">0</strong> times</div>
+      <p class="phase-desc">Called once when Tomcat undeploys the app or shuts down to release resources.</p>
+    </div>
+  </div>
+
+  <!-- Main Controls Layout -->
+  <div class="main-layout">
+    <!-- Interactive Simulator & Actions -->
+    <section class="card">
+      <h2 class="card-title">🎮 Lifecycle Event Controller</h2>
+
+      <div class="btn-grid">
+        <button id="sendReqBtn" class="btn btn-primary">⚡ Dispatch Client Request (doGet)</button>
+        <button id="burstBtn" class="btn btn-secondary">🚀 Simulate 10 Concurrent Requests</button>
+        <button id="redeployBtn" class="btn btn-warning">🔄 Simulate Container Redeploy</button>
+        <button id="openEndpointBtn" type="button" class="btn btn-outline">🌐 Open Live Tomcat Servlet Endpoint</button>
+      </div>
+
+      <div class="stats-summary">
+        <div class="stat-pill">
+          <span>Lifecycle State:</span>
+          <strong id="lifecycleState" class="text-green">RUNNING / READY</strong>
+        </div>
+        <div class="stat-pill">
+          <span>Thread Model:</span>
+          <strong>Multi-Threaded Service</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- Terminal Log Console -->
+    <section class="card log-card">
+      <div class="log-top">
+        <h2 class="card-title" style="border:none; margin:0; padding:0;">🖥️ Servlet Container Event Log</h2>
+        <button id="clearLogBtn" class="btn btn-sm btn-outline">Clear</button>
+      </div>
+
+      <div class="console-box" id="consoleBox">
+        <div class="log-line text-blue">[Tomcat] -&gt; Classloader loaded LifecycleServlet.class</div>
+        <div class="log-line">[LifecycleServlet] -&gt; Constructor invoked. Instance created.</div>
+        <div class="log-line text-green">[LifecycleServlet] -&gt; init(ServletConfig) completed. (departmentCode = SSE-WEBTECH-2026)</div>
+      </div>
+    </section>
+  </div>
+
+  <footer>Web Technology • ITA0202 • Harish T • 192521373</footer>
+</div>
+
+<!-- ===================== LIVE SERVLET ENDPOINT VIEW (mimics LifecycleServlet's generated page) ===================== -->
+<div class="container hidden" id="servletView">
+  <div class="box" id="servletBox"></div>
+</div>
+
+<script>
+// CO3 - EXP 9 | Servlet Lifecycle Demonstration (all-in-one)
+// The dashboard simulator (buttons, phase cards, log console) works exactly
+// as before. "Open Live Tomcat Servlet Endpoint" now simulates actually
+// hitting LifecycleServlet's doGet(): it increments the shared service
+// counter and renders the same dynamic HTML the servlet's PrintWriter would
+// produce, right here on the same page.
+
+const dashboardView = document.getElementById('dashboardView');
+const servletView = document.getElementById('servletView');
+const servletBox = document.getElementById('servletBox');
+
+let constructorCalls = 1;
+let initCalls = 1;
+let serviceCalls = 0;
+let destroyCalls = 0;
+
+const initTimestamp = new Date().toLocaleString('en-IN', {
+  year: 'numeric', month: '2-digit', day: '2-digit',
+  hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+});
+const initParameterValue = 'SSE-WEBTECH-2026';
+const serverInfo = 'Apache Tomcat/10.1 (simulated)';
+
+const valConstructor = document.getElementById('valConstructor');
+const valInit = document.getElementById('valInit');
+const valService = document.getElementById('valService');
+const valDestroy = document.getElementById('valDestroy');
+const lifecycleState = document.getElementById('lifecycleState');
+const consoleBox = document.getElementById('consoleBox');
+
+const sendReqBtn = document.getElementById('sendReqBtn');
+const burstBtn = document.getElementById('burstBtn');
+const redeployBtn = document.getElementById('redeployBtn');
+const clearLogBtn = document.getElementById('clearLogBtn');
+const openEndpointBtn = document.getElementById('openEndpointBtn');
+
+function logConsole(msg, type = '') {
+  const time = new Date().toLocaleTimeString();
+  const div = document.createElement('div');
+  div.className = `log-line ${type}`;
+  div.textContent = `[${time}] ${msg}`;
+  consoleBox.appendChild(div);
+  consoleBox.scrollTop = consoleBox.scrollHeight;
+}
+
+function updateMetrics() {
+  valConstructor.textContent = constructorCalls;
+  valInit.textContent = initCalls;
+  valService.textContent = serviceCalls;
+  valDestroy.textContent = destroyCalls;
+}
+
+// 1. Single Request Dispatch (doGet)
+sendReqBtn.addEventListener('click', () => {
+  serviceCalls++;
+  updateMetrics();
+  logConsole(`[LifecycleServlet.doGet()] -> Handled HTTP GET on Thread [worker-${Math.floor(Math.random() * 8) + 1}]. Total Requests = ${serviceCalls}`);
+});
+
+// 2. Burst of 10 Concurrent Requests
+burstBtn.addEventListener('click', () => {
+  logConsole(`--- Initiating Concurrent Batch of 10 Requests ---`, 'text-blue');
+  for (let i = 1; i <= 10; i++) {
+    serviceCalls++;
+    const threadId = Math.floor(Math.random() * 16) + 1;
+    setTimeout(() => {
+      logConsole(`[LifecycleServlet.service()] -> Concurrent request #${serviceCalls} processed by thread [pool-1-thread-${threadId}]`);
+      updateMetrics();
+    }, i * 40);
+  }
+});
+
+// 3. Redeploy Container Simulation (destroy -> constructor -> init)
+redeployBtn.addEventListener('click', () => {
+  logConsole(`[Tomcat] -> Initiating Application Undeploy...`, 'text-blue');
+
+  destroyCalls++;
+  lifecycleState.textContent = 'DESTROYING / SHUTDOWN';
+  lifecycleState.className = 'text-red';
+  logConsole(`[LifecycleServlet.destroy()] -> Method called. Releasing open database pools & socket descriptors.`, 'text-blue');
+  updateMetrics();
+
+  setTimeout(() => {
+    constructorCalls++;
+    logConsole(`[Tomcat] -> Rebuilding Servlet context. New instance constructor() called. Instance #${constructorCalls}`);
+    updateMetrics();
+
+    setTimeout(() => {
+      initCalls++;
+      lifecycleState.textContent = 'RUNNING / READY';
+      lifecycleState.className = 'text-green';
+      logConsole(`[LifecycleServlet.init()] -> Servlet re-initialized with fresh ServletConfig.`, 'text-green');
+      updateMetrics();
+    }, 400);
+  }, 600);
+});
+
+// Clear log
+clearLogBtn.addEventListener('click', () => {
+  consoleBox.innerHTML = '';
+});
+
+// Equivalent of LifecycleServlet.doGet(), rendered inline instead of a real request
+function renderServletEndpoint() {
+  serviceCalls++;
+  updateMetrics();
+  logConsole(`[LifecycleServlet.doGet()] -> service dispatch #${serviceCalls} (via live endpoint view)`);
+
+  let html = '';
+  html += `<span class="srv-badge">Tomcat Lifecycle Inspector</span>`;
+  html += `<h1>Servlet Lifecycle State</h1>`;
+  html += `<p class="srv-intro">Click "Refresh (Trigger doGet)" to observe how <code>doGet()</code> increments on each request while <code>init()</code> remains ${initCalls}.</p>`;
+
+  html += `<div class="srv-grid">`;
+  html += `<div class="srv-step-box"><span class="srv-step-label">1. Constructor</span><span class="srv-step-val">${constructorCalls}</span></div>`;
+  html += `<div class="srv-step-box"><span class="srv-step-label">2. init()</span><span class="srv-step-val">${initCalls}</span></div>`;
+  html += `<div class="srv-step-box"><span class="srv-step-label">3. service / doGet</span><span class="srv-step-val" style="color:#a855f7;">${serviceCalls}</span></div>`;
+  html += `<div class="srv-step-box"><span class="srv-step-label">4. destroy()</span><span class="srv-step-val">${destroyCalls}</span></div>`;
+  html += `</div>`;
+
+  html += `<div class="srv-info-list">`;
+  html += `<div><span>Servlet Initialized At:</span><strong>${initTimestamp}</strong></div>`;
+  html += `<div><span>Init Param (departmentCode):</span><strong style="color:#38bdf8;">${initParameterValue}</strong></div>`;
+  html += `<div><span>Servlet Container:</span><span>${serverInfo}</span></div>`;
+  html += `</div>`;
+
+  html += `<div class="srv-btn-row">`;
+  html += `<button type="button" class="srv-btn srv-btn-primary" id="refreshEndpointBtn">🔄 Refresh (Trigger doGet)</button>`;
+  html += `<button type="button" class="srv-btn srv-btn-secondary" id="backToPortalBtn">&larr; Back to Client Portal</button>`;
+  html += `</div>`;
+
+  servletBox.innerHTML = html;
+
+  document.getElementById('refreshEndpointBtn').addEventListener('click', renderServletEndpoint);
+  document.getElementById('backToPortalBtn').addEventListener('click', () => {
+    servletView.classList.add('hidden');
+    dashboardView.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+openEndpointBtn.addEventListener('click', () => {
+  dashboardView.classList.add('hidden');
+  servletView.classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  renderServletEndpoint();
+});
+</script>
+</body>
+</html>
