@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+    <display-name>IT Service Request Management System</display-name>
+    <description>
+        Unit IV Assessment II - Enterprise IT Technical Complaint & Service Request Tracking System
+        Implementing the Model-View-Controller (MVC) Pattern with JSP, Servlet, and JavaBean.
+    </description>
+
+    <!-- Welcome File List -->
+    <welcome-file-list>
+        <welcome-file>serviceRequest.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+    <!-- Controller Servlet Configuration -->
+    <servlet>
+        <servlet-name>ServiceRequestServlet</servlet-name>
+        <servlet-class>com.itservice.controller.ServiceRequestServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ServiceRequestServlet</servlet-name>
+        <url-pattern>/ServiceRequestServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ServiceRequestServlet</servlet-name>
+        <url-pattern>/service-request</url-pattern>
+    </servlet-mapping>
+
+    <!-- Session Timeout Configuration (30 Minutes) -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+</web-app>

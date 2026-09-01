@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="header-top">
+                <div class="header-titles">
+                    <h1>IT Service Request Management System</h1>
+                </div>
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                </div>
+            </div>
+
+            <!-- Tab Navigation Bar -->
+            <nav class="nav-tabs" id="mainNavTabs">
+                <button class="tab-btn active" data-tab="simulator">⚡ Live MVC Simulator</button>
+                <button class="tab-btn" data-tab="mvc-arch">🏛️ MVC Architecture</button>
+                <button class="tab-btn" data-tab="solutions">📝 Question Solutions (30M)</button>
+                <button class="tab-btn" data-tab="ticket-queue">📊 Ticket Queue &amp; SLA</button>
+                <button class="tab-btn" data-tab="reports">📈 Reports &amp; Analytics</button>
+                <button class="tab-btn" data-tab="viva">💡 Viva Voce Prep</button>
+                <button class="tab-btn" data-tab="deployment">🚀 Tomcat Deployment</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="main-container">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: LIVE MVC SIMULATOR (DEMO) -->
+        <!-- ========================================== -->
+        <section id="tab-simulator" class="tab-content active">
+            
+            <!-- Live Request Flow Animation Stage -->
+            <div class="glass-card" style="margin-bottom: 1.5rem;">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <div class="icon-box">🔄</div>
+                        <div>
+                            <h2>Real-Time MVC Request-Response Lifecycle</h2>
+                            <p style="font-size: 0.85rem; color: var(--text-dim);">Trace how your request travels across the MVC components upon submission.</p>
+                        </div>
+                    </div>
+                    <span id="lifecycleStatusBadge" class="pill-badge badge-info">Status: Idle (Ready)</span>
+                </div>
+
+                <div class="mvc-visualizer" id="lifecycleVisualizer">
+                    <div class="mvc-card view" id="stepViewInput">
+                        <span class="mvc-tag view-tag">1. View (Input)</span>
+                        <div class="mvc-component-name"><code>serviceRequest.jsp</code></div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Captures Employee ID, Dept, Category &amp; Priority via HTML5 Form.</p>
+                        <div style="margin-top: 0.5rem; font-size: 0.78rem; color: #38bdf8;"><strong>Method:</strong> HTTP POST</div>
+                    </div>
+
+                    <div class="mvc-card controller" id="stepController">
+                        <span class="mvc-tag controller-tag">2. Controller</span>
+                        <div class="mvc-component-name"><code>ServiceRequestServlet</code></div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Parses parameters in <code>doPost()</code>, validates constraints &amp; creates Model.</p>
+                        <div style="margin-top: 0.5rem; font-size: 0.78rem; color: #818cf8;"><strong>Forward:</strong> RequestDispatcher</div>
+                    </div>
+
+                    <div class="mvc-card model" id="stepModel">
+                        <span class="mvc-tag model-tag">3. Model</span>
+                        <div class="mvc-component-name"><code>ServiceRequest.java</code></div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">JavaBean encapsulating ticket state, SLA calculation &amp; ID generation.</p>
+                        <div style="margin-top: 0.5rem; font-size: 0.78rem; color: #6ee7b7;"><strong>Scope:</strong> Request Attribute</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two-Column Simulator Layout -->
+            <div class="card-grid grid-2">
+                
+                <!-- Left: View (JSP Form) -->
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <div class="icon-box">📋</div>
+                            <div>
+                                <h2>IT Service Request Form</h2>
+                                <p style="font-size: 0.82rem; color: var(--text-dim);">Replicates <code>serviceRequest.jsp</code> (Question 1)</p>
+                            </div>
+                        </div>
+                        <span class="pill-badge badge-primary">JSP View Form</span>
+                    </div>
+
+                    <!-- Client/Server Error Banner -->
+                    <div id="simErrorBox" class="alert alert-danger" style="display: none;">
+                        <div>
+                            <strong>⚠️ Server-Side Validation Errors:</strong>
+                            <ul id="simErrorList"></ul>
+                        </div>
+                    </div>
+
+                    <form id="simRequestForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="simEmpId">Employee ID <span class="required">*</span></label>
+                                <input type="text" id="simEmpId" class="form-control" placeholder="e.g. EMP-192521373" value="EMP-192521373">
+                                <div class="form-helper">Alphanumeric (e.g. EMP-192521373)</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="simEmpName">Employee Name <span class="required">*</span></label>
+                                <input type="text" id="simEmpName" class="form-control" placeholder="e.g. Harish T" value="Harish T">
+                                <div class="form-helper">Official Employee Full Name</div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="simDept">Department <span class="required">*</span></label>
+                                <select id="simDept" class="form-select">
+                                    <option value="">-- Select Department --</option>
+                                    <option value="Software Engineering" selected>Software Engineering</option>
+                                    <option value="Information Technology">Information Technology</option>
+                                    <option value="Human Resources">Human Resources</option>
+                                    <option value="Finance & Accounts">Finance & Accounts</option>
+                                    <option value="Marketing & Sales">Marketing & Sales</option>
+                                    <option value="Operations & Logistics">Operations & Logistics</option>
+                                    <option value="Quality Assurance">Quality Assurance</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="simCategory">Problem Category <span class="required">*</span></label>
+                                <select id="simCategory" class="form-select">
+                                    <option value="">-- Select Category --</option>
+                                    <option value="Network" selected>Network (Wi-Fi, VPN, LAN)</option>
+                                    <option value="Software">Software (IDE, OS, License)</option>
+                                    <option value="Hardware">Hardware (Laptop, Monitor)</option>
+                                    <option value="Account">Account (Password, SSO, MFA)</option>
+                                    <option value="Other">Other Technical Issues</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Priority Level <span class="required">*</span></label>
+                            <div class="radio-group">
+                                <div class="radio-card priority-low">
+                                    <input type="radio" id="simPrioLow" name="simPriority" value="Low">
+                                    <label for="simPrioLow">
+                                        <span>🟢 Low</span>
+                                        <small style="font-size:0.75rem; color:var(--text-dim);">Minor Issue</small>
+                                    </label>
+                                </div>
+                                <div class="radio-card priority-medium">
+                                    <input type="radio" id="simPrioMed" name="simPriority" value="Medium">
+                                    <label for="simPrioMed">
+                                        <span>🟡 Medium</span>
+                                        <small style="font-size:0.75rem; color:var(--text-dim);">Standard SLA</small>
+                                    </label>
+                                </div>
+                                <div class="radio-card priority-high">
+                                    <input type="radio" id="simPrioHigh" name="simPriority" value="High" checked>
+                                    <label for="simPrioHigh">
+                                        <span>🔴 High</span>
+                                        <small style="font-size:0.75rem; color:var(--text-dim);">Work Blocking</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="simDesc">Problem Description <span class="required">*</span></label>
+                            <textarea id="simDesc" class="form-textarea" rows="3" placeholder="Describe the technical issue in detail...">VPN gateway timeout error occurred when accessing the remote Kubernetes cluster staging environment.</textarea>
+                            <div class="form-helper">Multi-line description of the technical complaint</div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" id="btnFillSample" class="btn btn-secondary" style="font-size: 0.85rem;">
+                                <span>🎲</span> Fill Sample Data
+                            </button>
+                            <button type="submit" id="btnSimSubmit" class="btn btn-primary">
+                                <span>🚀</span> Submit Request (POST)
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Right: Result View (acknowledgement.jsp rendering) -->
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <div class="icon-box">🎫</div>
+                            <div>
+                                <h2>Acknowledgement View</h2>
+                                <p style="font-size: 0.82rem; color: var(--text-dim);">Replicates <code>acknowledgement.jsp</code> (Question 4)</p>
+                            </div>
+                        </div>
+                        <span class="pill-badge badge-success">Processed Result</span>
+                    </div>
+
+                    <!-- Processed Result Container -->
+                    <div id="simResultWrapper">
+                        <div class="alert alert-success">
+                            <span>✅</span>
+                            <div>
+                                <strong>Request Registered Successfully</strong>
+                                <p id="simSuccessText" style="font-size: 0.85rem; color: #a7f3d0; margin-top: 2px;">
+                                    Controller validated parameters and forwarded request to acknowledgement view.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="ticket-card" style="padding: 1.5rem;">
+                            <div class="ticket-header" style="padding-bottom: 1rem; margin-bottom: 1rem;">
+                                <div>
+                                    <span style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Ticket Number</span>
+                                    <div class="ticket-id-badge" id="resTicketId" style="font-size: 1.15rem; padding: 0.25rem 0.75rem;">SR-1001</div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <span class="pill-badge badge-primary" id="resStatus">Open</span>
+                                    <span class="pill-badge badge-danger" id="resPriority">High</span>
+                                </div>
+                            </div>
+
+                            <div class="ticket-details-grid" style="grid-template-columns: repeat(2, 1fr); gap: 0.85rem; margin-bottom: 1rem;">
+                                <div class="ticket-item">
+                                    <div class="item-label">Employee ID</div>
+                                    <div class="item-value"><code id="resEmpId">EMP-192521373</code></div>
+                                </div>
+                                <div class="ticket-item">
+                                    <div class="item-label">Employee Name</div>
+                                    <div class="item-value" id="resEmpName">Harish T</div>
+                                </div>
+                                <div class="ticket-item">
+                                    <div class="item-label">Department</div>
+                                    <div class="item-value" id="resDept">Software Engineering</div>
+                                </div>
+                                <div class="ticket-item">
+                                    <div class="item-label">Category</div>
+                                    <div class="item-value" id="resCategory">🌐 Network</div>
+                                </div>
+                                <div class="ticket-item">
+                                    <div class="item-label">Submission Date</div>
+                                    <div class="item-value" id="resTimestamp" style="font-size: 0.82rem;">2026-08-29 08:15:00</div>
+                                </div>
+                                <div class="ticket-item">
+                                    <div class="item-label">Estimated SLA</div>
+                                    <div class="item-value" id="resSla" style="font-size: 0.82rem; color: #38bdf8;">Within 4 Hours (Critical)</div>
+                                </div>
+                            </div>
+
+                            <div class="ticket-description-box" style="padding: 0.85rem; margin-bottom: 0.5rem;">
+                                <div style="font-size: 0.75rem; font-weight: 700; color: #a5b4fc; text-transform: uppercase; margin-bottom: 0.25rem;">Problem Description</div>
+                                <p id="resDesc" style="font-size: 0.88rem; color: #f8fafc;">VPN gateway timeout error occurred when accessing the remote Kubernetes cluster staging environment.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: MVC ARCHITECTURE BREAKDOWN -->
+        <!-- ========================================== -->
+        <section id="tab-mvc-arch" class="tab-content">
+            <div class="glass-card" style="margin-bottom: 1.5rem;">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <div class="icon-box">🏛️</div>
+                        <div>
+                            <h2>Model-View-Controller (MVC) Architectural Specification</h2>
+                            <p style="font-size: 0.85rem; color: var(--text-dim);">Detailed component analysis and architectural responsibilities for the IT Service Request System.</p>
+                        </div>
+                    </div>
+                    <span class="pill-badge badge-primary">Design Pattern</span>
+                </div>
+
+                <!-- 3 MVC Pillars -->
+                <div class="mvc-visualizer">
+                    <div class="mvc-card model">
+                        <span class="mvc-tag model-tag">Model</span>
+                        <div class="mvc-component-name"><code>ServiceRequest.java</code></div>
+                        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;">
+                            &bull; <strong>Business Entity:</strong> Represents the IT Service ticket.<br>
+                            &bull; <strong>Encapsulation:</strong> Private fields for <code>employeeId</code>, <code>employeeName</code>, <code>department</code>, <code>problemCategory</code>, <code>problemDescription</code>, <code>priority</code>, and <code>requestId</code>.<br>
+                            &bull; <strong>JavaBean Compliance:</strong> Public default constructor, parameterized constructor, getters &amp; setters, Serializable.<br>
+                            &bull; <strong>Purity:</strong> Completely free of HTML markup and HTTP request/response objects.
+                        </p>
+                    </div>
+
+                    <div class="mvc-card view">
+                        <span class="mvc-tag view-tag">View</span>
+                        <div class="mvc-component-name"><code>serviceRequest.jsp</code> &amp; <code>acknowledgement.jsp</code></div>
+                        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;">
+                            &bull; <strong>User Presentation:</strong> Generates HTML interface for client browsers.<br>
+                            &bull; <strong>Form View (<code>serviceRequest.jsp</code>):</strong> Provides form controls for data entry and displays validation alerts.<br>
+                            &bull; <strong>Result View (<code>acknowledgement.jsp</code>):</strong> Reads Model attributes from Request Scope and renders the formatted confirmation ticket.<br>
+                            &bull; <strong>Passive Role:</strong> Never performs business validation or database operations.
+                        </p>
+                    </div>
+
+                    <div class="mvc-card controller">
+                        <span class="mvc-tag controller-tag">Controller</span>
+                        <div class="mvc-component-name"><code>ServiceRequestServlet.java</code></div>
+                        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;">
+                            &bull; <strong>Central Coordinator:</strong> Handles HTTP <code>POST</code> requests via <code>doPost()</code>.<br>
+                            &bull; <strong>Parameter Extraction:</strong> Reads values using <code>request.getParameter()</code>.<br>
+                            &bull; <strong>Server-Side Validation:</strong> Checks mandatory fields, allowed categories, and valid priority options.<br>
+                            &bull; <strong>Model Creation:</strong> Generates <code>SR-1001</code> ID and instantiates <code>ServiceRequest</code>.<br>
+                            &bull; <strong>Navigation &amp; Forwarding:</strong> Attaches Model to Request Scope and forwards via <code>RequestDispatcher</code>.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Detailed Request Flow Stepper -->
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: #c7d2fe;">Step-by-Step Request Execution Pipeline</h3>
+                
+                <div class="flow-pipeline">
+                    <div class="flow-step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <h4>Client Interaction on JSP View</h4>
+                            <p>Employee enters details into <code>serviceRequest.jsp</code> and clicks <em>Submit</em>. The browser packages inputs and transmits an HTTP <code>POST</code> request to <code>/ServiceRequestServlet</code>.</p>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <h4>Servlet Interception &amp; Local Scope Initialization</h4>
+                            <p>The servlet container invokes <code>ServiceRequestServlet.doPost()</code> on a dedicated thread. Parameters are extracted into method-local variables to ensure <strong>thread-safety</strong>.</p>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <h4>Server-Side Validation Gate</h4>
+                            <p>The controller evaluates mandatory fields (non-empty ID, name length, valid category enum, minimum 10 char description). If invalid, it repopulates previous values and forwards back to <code>serviceRequest.jsp</code> with error alerts.</p>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <h4>Model Instantiation &amp; Unique ID Generation</h4>
+                            <p>Upon valid input, the controller generates a sequential identifier (`SR-1001` via `AtomicInteger`) and creates a new <code>ServiceRequest</code> JavaBean instance.</p>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-num">5</div>
+                        <div class="step-content">
+                            <h4>Request Attribute Binding &amp; Server-Side Forwarding</h4>
+                            <p>Controller executes <code>request.setAttribute("serviceRequest", serviceRequest)</code> and dispatches the request to <code>acknowledgement.jsp</code> via <code>RequestDispatcher.forward()</code> without URL redirection.</p>
+                        </div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-num">6</div>
+                        <div class="step-content">
+                            <h4>Acknowledgement View Rendering</h4>
+                            <p><code>acknowledgement.jsp</code> retrieves the Model from request scope, formats the ticket details with SLA calculations, and delivers the confirmation response to the employee.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: QUESTION SOLUTIONS (30 MARKS) -->
+        <!-- ========================================== -->
+        <section id="tab-solutions" class="tab-content">
+            
+            <!-- Question 1: View JSP (7 Marks) -->
+            <div class="glass-card" style="margin-bottom: 1.5rem;">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <div class="icon-box">1</div>
+                        <div>
+                            <h2>Question 1: Design the View - JSP Form (7 Marks)</h2>
+                            <p style="font-size: 0.85rem; color: var(--text-dim);"><code>serviceRequest.jsp</code> &bull; Form controls for Employee ID, Name, Dept, Category, Description &amp; Priority</p>
+                        </div>
+                    </div>
+                    <span class="pill-badge badge-primary">7 Marks</span>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Sub-part</th>
+                                <th>Form Requirement</th>
+                                <th>HTML/JSP Control Implemented</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Q1.a</strong></td>
+                                <td>Employee ID &amp; Employee Name</td>
+                                <td><code>&lt;input type="text" name="employeeId" required&gt;</code> and <code>&lt;input type="text" name="employeeName" required&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Q1.b</strong></td>
+                                <td>Department</td>
+                                <td><code>&lt;select name="department"&gt;</code> with standard corporate departments (Software, IT, HR, Finance, QA).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Q1.c</strong></td>
+                                <td>Problem Category</td>
+                                <td><code>&lt;select name="problemCategory"&gt;</code> with options: <em>Network</em>, <em>Software</em>, <em>Hardware</em>, <em>Account</em>, <em>Other</em>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Q1.d</strong></td>
+                                <td>Problem Description</td>
+                                <td>Multi-line <code>&lt;textarea name="problemDescription" rows="4"&gt;</code> control.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Q1.e</strong></td>
+                                <td>Priority</td>
+                                <td>Radio button / select options: <em>Low</em>, <em>Medium</em>, <em>High</em>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Q1.f</strong></td>
+                                <td>Submit &amp; Reset Buttons</td>
+                                <td>Clear <code>&lt;button type="submit"&gt;</code> with action pointing to <code>ServiceRequestServlet</code> via <code>method="POST"</code>.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>serviceRequest.jsp (Snippet)</span>
+                        <button class="copy-btn" onclick="copyCode('codeQ1')">Copy Code</button>
+                    </div>
+                    <pre><code id="codeQ1">&lt;form action="ServiceRequestServlet" method="POST"&gt;
+    &lt;!-- Employee ID &amp; Name --&gt;
+    &lt;input type="text" name="employeeId" placeholder="EMP-1024" required /&gt;
+    &lt;input type="text" name="employeeName" placeholder="Jane Smith" required /&gt;
+
+    &lt;!-- Department &amp; Category --&gt;
+    &lt;select name="department" required&gt;
+        &lt;option value="Software Engineering"&gt;Software Engineering&lt;/option&gt;
+        &lt;option value="Information Technology"&gt;Information Technology&lt;/option&gt;
+        &lt;option value="Human Resources"&gt;Human Resources&lt;/option&gt;
+    &lt;/select&gt;
+
+    &lt;select name="problemCategory" required&gt;
+        &lt;option value="Network"&gt;Network&lt;/option&gt;
+        &lt;option value="Software"&gt;Software&lt;/option&gt;
+        &lt;option value="Hardware"&gt;Hardware&lt;/option&gt;
+        &lt;option value="Account"&gt;Account&lt;/option&gt;
+        &lt;option value="Other"&gt;Other&lt;/option&gt;
+    &lt;/select&gt;
+
+    &lt;!-- Priority --&gt;
+    &lt;input type="radio" name="priority" value="Low"&gt; Low
+    &lt;input type="radio" name="priority" value="Medium" checked&gt; Medium
+    &lt;input type="radio" name="priority" value="High"&gt; High
+
+    &lt;!-- Multi-line Description --&gt;
+    &lt;textarea name="problemDescription" rows="4" required&gt;&lt;/textarea&gt;
+
+    &lt;button type="submit"&gt;Submit Service Request&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+                </div>
+            </div>
+
+            <!-- Question 2: Model (5 Marks) -->
+            <div class="glass-card" style="margin-bottom: 1.5rem;">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <div class="icon-box">2</div>
+                        <div>
+                            <h2>Question 2: Develop the Model - Java Class (5 Marks)</h2>
+                            <p style="font-size: 0.85rem; color: var(--text-dim);"><code>ServiceRequest.java</code> &bull; Pure JavaBean POJO with encapsulation, constructors &amp; getters/setters</p>
+                        </div>
+                    </div>
+                    <span class="pill-badge badge-primary">5 Marks</span>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>src/com/itservice/model/ServiceRequest.java</span>
+                        <button class="copy-btn" onclick="copyCode('codeQ2')">Copy Code</button>
+                    </div>
+                    <pre><code id="codeQ2">package com.itservice.model;
+
+import java.io.Serializable;
+
+public class ServiceRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private String employeeId;
+    private String employeeName;
+    private String department;
+    private String problemCategory;
+    private String problemDescription;
+    private String priority;
+    private String requestId;
+
+    // Default No-Arg Constructor (JavaBean compliance)
+    public ServiceRequest() {}
+
+    // Parameterized Constructor
+    public ServiceRequest(String requestId, String employeeId, String employeeName,
+                          String department, String problemCategory,
+                          String problemDescription, String priority) {
+        this.requestId = requestId;
+        this.employeeId = employeeId;
+        this.employeeName = employeeName;
+        this.department = department;
+        this.problemCategory = problemCategory;
+        this.problemDescription = problemDescription;
+        this.priority = priority;
+    }
+
+    // Getters and Setters
+    public String getEmployeeId() { return employeeId; }
+    public void setEmployeeId(String employeeId) { this.employeeId = employeeId; }
+
+    public String getEmployeeName() { return employeeName; }
+    public void setEmployeeName(String employeeName) { this.employeeName = employeeName; }
+
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
+
+    public String getProblemCategory() { return problemCategory; }
+    public void setProblemCategory(String problemCategory) { this.problemCategory = problemCategory; }
+
+    public String getProblemDescription() { return problemDescription; }
+    public void setProblemDescription(String problemDescription) { this.problemDescription = problemDescription; }
+
+    public String getPriority() { return priority; }
+    public void setPriority(String priority) { this.priority = priority; }
+
+    public String getRequestId() { return requestId; }
+    public void setRequestId(String requestId) { this.requestId = requestId; }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Question 3: Controller Servlet (10 Marks) -->
+            <div class="glass-card" style="margin-bottom: 1.5rem;">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <div class="icon-box">3</div>
+                        <div>
+                            <h2>Question 3: Develop the Controller Servlet (10 Marks)</h2>
+                            <p style="font-size: 0.85rem; color: var(--text-dim);"><code>ServiceRequestServlet.java</code> &bull; doPost(), parameter extraction, validation, Model creation &amp; forwarding</p>
+                        </div>
+                    </div>
+                    <span class="pill-badge badge-primary">10 Marks</span>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>src/com/itservice/controller/ServiceRequestServlet.java</span>
+                        <button class="copy-btn" onclick="copyCode('codeQ3')">Copy Code</button>
+                    </div>
+                    <pre><code id="codeQ3">@WebServlet(name = "ServiceRequestServlet", urlPatterns = {"/ServiceRequestServlet"})
+public class ServiceRequestServlet extends HttpServlet {
+    private static final AtomicInteger requestCounter = new AtomicInteger(1000);
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        // Q3.b: Read parameters into thread-safe local variables (Q3.h)
+        String employeeId = request.getParameter("employeeId");
+        String employeeName = request.getParameter("employeeName");
+        String department = request.getParameter("department");
+        String problemCategory = request.getParameter("problemCategory");
+        String problemDescription = request.getParameter("problemDescription");
+        String priority = request.getParameter("priority");
+
+        // Q3.c: Server-side validation
+        List&lt;String&gt; errors = new ArrayList&lt;&gt;();
+        if (employeeId == null || employeeId.trim().isEmpty()) errors.add("Employee ID is required.");
+        if (employeeName == null || employeeName.trim().isEmpty()) errors.add("Employee Name is required.");
+        if (department == null || department.trim().isEmpty()) errors.add("Department is required.");
+        if (problemCategory == null || problemCategory.trim().isEmpty()) errors.add("Category is required.");
+        if (problemDescription == null || problemDescription.trim().length() &lt; 10) errors.add("Description must be &gt;= 10 chars.");
+        if (priority == null || priority.trim().isEmpty()) errors.add("Priority is required.");
+
+        if (!errors.isEmpty()) {
+            request.setAttribute("errors", errors);
+            request.getRequestDispatcher("serviceRequest.jsp").forward(request, response);
+            return;
+        }
+
+        // Q3.e: Generate Request Number
+        String requestId = "SR-" + requestCounter.incrementAndGet();
+
+        // Q3.d: Create Model object
+        ServiceRequest serviceRequest = new ServiceRequest(
+            requestId, employeeId, employeeName, department, problemCategory, problemDescription, priority
+        );
+
+        // Q3.f: Set request attributes
+        request.setAttribute("serviceRequest", serviceRequest);
+        request.setAttribute("requestId", requestId);
+
+        // Q3.g: Forward to acknowledgement.jsp
+        RequestDispatcher dispatcher = request.getRequestDispatcher("acknowledgement.jsp");
+        dispatcher.forward(request, response);
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Question 4: Acknowledgement View & MVC (8 Marks) -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <div class="icon-box">4</div>
+                        <div>
+                            <h2>Question 4: Result View &amp; MVC Flow Explanation (8 Marks)</h2>
+                            <p style="font-size: 0.85rem; color: var(--text-dim);"><code>acknowledgement.jsp</code> &bull; Ticket attributes display, confirmation message &amp; MVC analysis</p>
+                        </div>
+                    </div>
+                    <span class="pill-badge badge-primary">8 Marks</span>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>acknowledgement.jsp (Snippet)</span>
+                        <button class="copy-btn" onclick="copyCode('codeQ4')">Copy Code</button>
+                    </div>
+                    <pre><code id="codeQ4">&lt;%-- Read Model object from Request Scope --%&gt;
+&lt;%
+    ServiceRequest reqObj = (ServiceRequest) request.getAttribute("serviceRequest");
+    String reqId = (String) request.getAttribute("requestId");
+%&gt;
+
+&lt;!-- Confirmation Banner (Q4.b) --&gt;
+&lt;div class="alert alert-success"&gt;
+    &lt;strong&gt;✅ Service Request Submitted Successfully!&lt;/strong&gt;
+&lt;/div&gt;
+
+&lt;!-- Ticket Details Table (Q4.a) --&gt;
+&lt;div class="ticket-card"&gt;
+    &lt;h3&gt;Request Number: &lt;%= reqId %&gt;&lt;/h3&gt;
+    &lt;p&gt;&lt;strong&gt;Employee ID:&lt;/strong&gt; &lt;%= reqObj.getEmployeeId() %&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Employee Name:&lt;/strong&gt; &lt;%= reqObj.getEmployeeName() %&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Department:&lt;/strong&gt; &lt;%= reqObj.getDepartment() %&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Category:&lt;/strong&gt; &lt;%= reqObj.getProblemCategory() %&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Priority:&lt;/strong&gt; &lt;%= reqObj.getPriority() %&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Description:&lt;/strong&gt; &lt;%= reqObj.getProblemDescription() %&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- MVC Architectural Explanation (Q4.c &amp; Q4.d) --&gt;
+&lt;div class="glass-card"&gt;
+    &lt;h3&gt;MVC Mapping:&lt;/h3&gt;
+    &lt;p&gt;&lt;strong&gt;Model:&lt;/strong&gt; ServiceRequest.java&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;View:&lt;/strong&gt; serviceRequest.jsp &amp; acknowledgement.jsp&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Controller:&lt;/strong&gt; ServiceRequestServlet.java&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: TICKET QUEUE & SLA MONITOR -->
+        <!-- ========================================== -->
+        <section id="tab-ticket-queue" class="tab-content">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <div class="icon-box">📊</div>
+                        <div>
+                            <h2>Enterprise IT Service Desk Queue</h2>
+                            <p style="font-size: 0.85rem; color: var(--text-dim);">Live service requests registered through the MVC pipeline.</p>
+                        </div>
+                    </div>
+                    <span id="queueCountBadge" class="pill-badge badge-primary">Total Tickets: 4</span>
+                </div>
+
+                <!-- Filters & Search Bar -->
+                <div class="form-row" style="margin-bottom: 1.25rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="queueSearchInput" class="form-control" placeholder="🔍 Search by Employee ID, Name or Ticket ID...">
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <select id="queueCategoryFilter" class="form-select" style="flex: 1;">
+                            <option value="ALL">All Categories</option>
+                            <option value="Network">Network</option>
+                            <option value="Software">Software</option>
+                            <option value="Hardware">Hardware</option>
+                            <option value="Account">Account</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <select id="queuePriorityFilter" class="form-select" style="flex: 1;">
+                            <option value="ALL">All Priorities</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tickets Data Table -->
+                <div class="data-table-container">
+                    <table class="data-table" id="ticketsTable">
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Employee</th>
+                                <th>Department</th>
+                                <th>Category</th>
+                                <th>Priority</th>
+                                <th>SLA Target</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ticketsTableBody">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 5: VIVA VOCE PREPARATION -->
+        <!-- ========================================== -->
+        <section id="tab-viva" class="tab-content">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <div class="icon-box">💡</div>
+                        <div>
+                            <h2>Viva Voce &amp; Technical Interview Questions</h2>
+                            <p style="font-size: 0.85rem; color: var(--text-dim);">Key theoretical concepts for Unit IV assessment.</p>
+                        </div>
+                    </div>
+                    <span class="pill-badge badge-info">25+ Questions Available</span>
+                </div>
+
+                <div class="flow-pipeline" id="vivaListContainer">
+                    
+                    <div class="flow-step">
+                        <div class="step-num">Q1</div>
+                        <div class="step-content">
+                            <h4>Why is the MVC pattern preferred over direct JSP-to-database access?</h4>
+                            <p>Direct JSP access (Model 1) results in spaghetti code with business and database logic mixed into presentation markup. MVC (Model 2) achieves clear separation of concerns, higher maintainability, testability, and code reusability across multiple frontends.</p>
+                        </div>
+                    </div>
+
+                    <div class="flow-step">
+                        <div class="step-num">Q2</div>
+                        <div class="step-content">
+                            <h4>What is the difference between RequestDispatcher.forward() and HttpServletResponse.sendRedirect()?</h4>
+                            <p><code>forward()</code> happens entirely on the server within a single HTTP request, preserving request-scoped attributes without altering the browser URL. <code>sendRedirect()</code> issues an HTTP 302 response instructing the browser to initiate a brand-new HTTP GET request, discarding request attributes and changing the browser URL.</p>
+                        </div>
+                    </div>
+
+                    <div class="flow-step">
+                        <div class="step-num">Q3</div>
+                        <div class="step-content">
+                            <h4>How is thread safety achieved in Java Servlets?</h4>
+                            <p>Because a single Servlet instance is shared across all concurrent client threads in the servlet container, all request-specific data must be stored in method-local variables inside <code>doPost()</code> or <code>doGet()</code>. Method variables reside on each thread's separate stack frame, preventing race conditions.</p>
+                        </div>
+                    </div>
+
+                    <div class="flow-step">
+                        <div class="step-num">Q4</div>
+                        <div class="step-content">
+                            <h4>What is the purpose of the web.xml deployment descriptor?</h4>
+                            <p><code>web.xml</code> declares servlet configurations, URL mapping patterns (e.g. mapping <code>/ServiceRequestServlet</code> to <code>com.itservice.controller.ServiceRequestServlet</code>), session timeouts, error pages, and welcome file lists for the servlet container.</p>
+                        </div>
+                    </div>
+
+                    <div class="flow-step">
+                        <div class="step-num">Q5</div>
+                        <div class="step-content">
+                            <h4>Why is server-side validation mandatory even when HTML5 validation exists?</h4>
+                            <p>Client-side HTML5 validation can be easily bypassed by disabling JavaScript or sending direct HTTP requests using tools like Postman, curl, or automated scripts. Server-side validation in the Controller Servlet acts as the non-negotiable security gate.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 6: TOMCAT DEPLOYMENT GUIDE -->
+        <!-- ========================================== -->
+        <section id="tab-deployment" class="tab-content">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <div class="icon-box">🚀</div>
+                        <div>
+                            <h2>Apache Tomcat Deployment &amp; Directory Layout</h2>
+                            <p style="font-size: 0.85rem; color: var(--text-dim);">Step-by-step instructions to compile, deploy and execute on Java web servers.</p>
+                        </div>
+                    </div>
+                    <span class="pill-badge badge-primary">Tomcat 8 / 9 / 10 Ready</span>
+                </div>
+
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Project Directory Hierarchy</span>
+                    </div>
+                    <pre><code>CO4-AT2/
+├── WEB-INF/
+│   ├── web.xml                            &lt;-- Servlet mapping &amp; configuration
+│   └── classes/
+│       └── com/itservice/
+│           ├── model/ServiceRequest.class  &lt;-- Compiled Model JavaBean
+│           └── controller/ServiceRequestServlet.class &lt;-- Compiled Controller
+├── serviceRequest.jsp                     &lt;-- Q1 View (Input Form)
+├── acknowledgement.jsp                    &lt;-- Q4 View (Result Confirmation)
+├── style.css                              &lt;-- Visual Design System
+├── index.html                             &lt;-- Interactive Showcase
+└── README.md                              &lt;-- Complete Documentation</code></pre>
+                </div>
+
+                <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: #c7d2fe;">Compilation Commands (Command Prompt / Terminal)</h3>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Compilation Script</span>
+                    </div>
+                    <pre><code># 1. Navigate to CO4-AT2 folder
+cd CO4-AT2
+
+# 2. Compile Java Source files into WEB-INF/classes
+javac -cp ".;%CATALINA_HOME%\lib\servlet-api.jar" -d WEB-INF/classes src/com/itservice/model/ServiceRequest.java src/com/itservice/controller/ServiceRequestServlet.java
+
+# 3. Copy CO4-AT2 directory into Tomcat webapps
+xcopy /E /I . "%CATALINA_HOME%\webapps\CO4-AT2"
+
+# 4. Start Tomcat Server and open in browser:
+# http://localhost:8080/CO4-AT2/serviceRequest.jsp</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB: REPORTS & ANALYTICS                  -->
+        <!-- ========================================== -->
+        <section id="tab-reports" class="tab-content">
+
+            <!-- Report Header Card -->
+            <div class="glass-card" style="margin-bottom: 1.5rem;">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <div class="icon-box">📈</div>
+                        <div>
+                            <h2>IT Service Desk — Issue Analytics Report</h2>
+                            <p style="font-size: 0.85rem; color: var(--text-dim);">Aggregated breakdown of all submitted service requests by category, priority, and timeline.</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <span class="pill-badge badge-info" id="reportGeneratedAt">Generated: —</span>
+                        <button id="btnExportPdf" class="btn btn-primary" style="gap: 0.4rem;">
+                            <span>📄</span> Export as PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Stat Cards -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="background: rgba(79,70,229,0.15); border: 1px solid rgba(79,70,229,0.3); border-radius: var(--radius-md); padding: 1.25rem; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 800; color: #818cf8;" id="statTotal">0</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-top: 0.25rem;">Total Requests</div>
+                    </div>
+                    <div style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-md); padding: 1.25rem; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 800; color: #fca5a5;" id="statHigh">0</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-top: 0.25rem;">🔴 High Priority</div>
+                    </div>
+                    <div style="background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius-md); padding: 1.25rem; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 800; color: #fcd34d;" id="statMedium">0</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-top: 0.25rem;">🟡 Medium Priority</div>
+                    </div>
+                    <div style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius-md); padding: 1.25rem; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 800; color: #6ee7b7;" id="statLow">0</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-top: 0.25rem;">🟢 Low Priority</div>
+                    </div>
+                    <div style="background: rgba(14,165,233,0.15); border: 1px solid rgba(14,165,233,0.3); border-radius: var(--radius-md); padding: 1.25rem; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 800; color: #38bdf8;" id="statMostCommon">—</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-top: 0.25rem;">Top Issue Category</div>
+                    </div>
+                </div>
+
+                <!-- Category Breakdown Bar Chart -->
+                <h3 style="color: #c7d2fe; margin-bottom: 1rem;">Issue Category Breakdown</h3>
+                <div id="reportCategoryBars" style="display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2rem;"></div>
+
+                <!-- Priority Distribution -->
+                <h3 style="color: #c7d2fe; margin-bottom: 1rem;">Priority Distribution</h3>
+                <div id="reportPriorityBars" style="display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2rem;"></div>
+            </div>
+
+            <!-- Detailed Timeline Table -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <div class="icon-box">🗂️</div>
+                        <div>
+                            <h2>Full Request Timeline</h2>
+                            <p style="font-size: 0.85rem; color: var(--text-dim);">Every service request with date, time, category, priority and a summary of the reported issue.</p>
+                        </div>
+                    </div>
+                    <input type="text" id="reportSearch" class="form-control" placeholder="🔍 Search by name, ID or issue..." style="max-width: 280px;">
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table" id="reportTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Ticket ID</th>
+                                <th>Date &amp; Time</th>
+                                <th>Employee</th>
+                                <th>Department</th>
+                                <th>Category</th>
+                                <th>Priority</th>
+                                <th>Issue Summary</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportTableBody">
+                            <tr>
+                                <td colspan="8" style="text-align:center; color: var(--text-dim); padding: 2rem;">
+                                    No requests submitted yet. Submit a request from the Live MVC Simulator tab.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="header-container">
+            <p>IT Service Request Management System &bull; Unit IV Assessment II (CO4-AT2) &bull; Model-View-Controller Architecture</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Script -->
+    <script src="script.js"></script>
+</body>
+</html>
